@@ -1018,3 +1018,19 @@ class ProjectDocModels(models.Model):
     doc_project_dise_md=models.TextField()
     doc_mduser=models.ForeignKey(user_registration,on_delete=models.CASCADE,null=True,blank=True)
     
+
+#Shemeem == Other Leave
+class OtherLeave(models.Model):
+    name = models.CharField(max_length = 200, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    mobile = models.BigIntegerField(null=True, blank=True)
+    from_date = models.DateField(auto_now_add=False, auto_now=False,  null=True, blank=True)
+    to_date = models.DateField(auto_now_add=False, auto_now=False,  null=True, blank=True)
+    reason = models.TextField()
+    leave_status = models.CharField(max_length=200)
+    days = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.name
+
+#end

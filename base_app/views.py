@@ -21293,6 +21293,36 @@ def accounts_seen_leave(request,id):
     
 #Athul end    
     
-    
-    
-    
+
+#Shemeem == Apply other Leave
+def applyOtherLeave(request):
+    return render(request,'apply_other_leave.html')
+
+def applyNewOtherLeave(request):
+    if request.method == "POST":
+        leaves = OtherLeave()
+        leaves.name = request.POST['full_name']
+        leaves.email = request.POST['email']
+        leaves.mobile = request.POST['mobile']
+        leaves.from_date = request.POST['from']
+        leaves.to_date = request.POST['to']
+        leaves.leave_status = request.POST['haful']
+        leaves.reason = request.POST['reason']
+        
+        start = datetime.strptime(leaves.from_date, '%Y-%m-%d').date() 
+        end = datetime.strptime(leaves.to_date, '%Y-%m-%d').date()
+        diff = (end  - start).days
+        
+        # cnt =  Event.objects.filter(start_time__range=(start,end)).count()
+        
+        if diff == 0:
+            leaves.days = 1
+        else:
+            leaves.days = diff
+            
+        leaves.save()
+        messages.success(request, 'Leave applied successfully.')
+        return redirect(applyOtherLeave)
+    else:
+        messages.error(request, 'Something went wrong.')
+        return redirect(applyOtherLeave)

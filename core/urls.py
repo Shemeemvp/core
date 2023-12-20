@@ -1768,7 +1768,13 @@ urlpatterns = [
     path('account_leave_list/<int:id>',views.account_leave_list,name='account_leave_list'),
     path('accounts_seen_leave/<int:id>',views.accounts_seen_leave,name='accounts_seen_leave'),
     #Athul end
-    
+
+    #Shemeem ---Apply other Leave
+    path('apply_other_leave',views.applyOtherLeave, name='applyOtherLeave'),
+    path('apply_new_other_leave',views.applyNewOtherLeave, name='applyNewOtherLeave'),
+    #End
+
+
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
         
 
