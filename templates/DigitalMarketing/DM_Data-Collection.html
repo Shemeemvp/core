@@ -1,0 +1,214 @@
+{% extends 'DigitalMarketing/DM_devindex.html' %} 
+{% load static %}
+
+{% block content %}
+
+<div class="container" id="data-collect">
+  <div class="card">
+    <h4 class="text-center m-4">Data Collection</h4>
+    <form action="{% url 'data_collect_save' task.id %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-lg-6">
+              <div class="input-group p-3 m-2">
+                  <input type="date" class="form-control" name="dcdate" placeholder="DATE"  style=" color: #fff;">
+              </div>
+          </div>
+          
+          <div class="col-lg-6">
+              <div class="input-group p-3  m-2">
+                  <input type="text" class="form-control" name="dcname" placeholder="FULL NAME" style=" color: #fff;">
+              </div>
+              
+          </div>
+          <div class="col-lg-6">
+              <div class="input-group p-3  m-2">
+                  <input type="email" class="form-control" name="dcmail" placeholder="EMAIL ID" style=" color: #fff;">
+              </div>
+              
+          </div>
+          <div class="col-lg-6">
+              <div class="input-group p-3 m-2">
+                  <input type="tel" class="form-control" name="dcphno" placeholder="PHONE NUMBER" style=" color: #fff;">
+              </div>
+              
+          </div>
+          <div class="col-lg-6">
+              <div class="input-group p-3 m-2">
+                  <input type="text" class="form-control" name="dcloc" placeholder="LOCATION" style=" color: #fff;">
+              </div>
+              
+          </div>
+          <div class="col-lg-6">
+              <div class="input-group p-3 m-2">
+                  <input type="text" class="form-control"  name="dcinternship" placeholder=" APLIED INTERNSHIP/OJT" style=" color: #fff;">
+              </div>
+              
+          </div>
+          <div class="col-lg-6">
+              <div class="input-group p-3 m-2">
+                  <select id="Employee" class="form-control" name="dcfr_ex"  style="background-color:#434a54;border:none; color: #fff;">
+                      <option selected class="p-2 m-2">FRESHER / EXPERIENCED</option>
+                      <option class="p-2 m-2" value="FRESHER">Yes</option>
+                      <option class="p-2 m-2" value="EXPERIENCED">No</option>
+                      
+                  </select>
+                 
+              </div>
+             
+          </div>
+          <div class="col-lg-6">
+              <div class="input-group p-3 m-2">
+                  <select id="selectbox" class="form-control" name="dcstatus" style="background-color:#434a54;border:none; color: #fff;">
+                     
+                      <option class="p-2 m-2">Intrested</option>
+                      <option class="p-2 m-2">Not Intrested</option>
+                      <option class="p-2 m-2">Waiting</option>
+                      <option class="p-2 m-2">Busy Tone</option>
+                      <option class="p-2 m-2">Not Answering</option>	
+                      <option class="p-2 m-2">Call Back</option>
+                  </select>
+                 
+              </div>
+
+          </div>
+          <div class="col-lg-12 reason" id="reason" >
+            <label class="form-label p-2">   Reason :</label>
+              <div class="input-group p-3 m-2">
+                
+                <textarea class="form-control"  name="dcreason"style="color: #fff; height:150px;"></textarea>
+              </div>
+              
+          </div>
+      </div>
+    
+            <div class="p-3 m-3 text-end">
+                <button type="submit" class="btn btn-success">SAVE</button>
+            </div>
+    </form>
+
+  </div>
+    
+</div>
+
+<br>
+<div class="row"> 
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+            <h4 class="text-center mb-4"> DATA COLLECTION</h4>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+              <h6 class="p-2 mdi mdi-account-plus">&nbsp; count&nbsp; - &nbsp; {{rcount}}</h6>
+                <form>
+                  <div class="input-group input-group-sm mb-3">
+                    <input
+                      type="text"
+                      class="form-control text-white"
+                      id="myInput"
+                      onkeyup="myFunction()"
+                      placeholder="Search . . ."
+                      style="border: green"
+                    />
+                  </div>
+                </form>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table" id="myTable">
+                    <thead>
+                        <tr>
+                          <th scope="col">Sl no</th>
+                          <th scope="col">Date</th>
+                          <th scope="col">Full Name</th>
+                          <th scope="col">Email Id</th>
+                          <th scope="col">Phone No</th>
+                          <th scope="col">Location</th>
+                          <th scope="col">Applied Internship</th>
+                          <th scope="col">Experienced/Fresher</th>
+                          <th scope="col">Remarks/Status</th>
+                         
+                        </tr>
+                      </thead>
+                  
+                {% if datacollect %}
+                  
+                  <tbody>
+                    {% for i in datacollect %}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{{i.dc_date}}</td>
+                        <td>{{i.dc_name}} </td>
+                        <td>{{i.dc_email}}</td>
+                        <td>{{i.dc_phone}}</td>
+                        <td>{{i.dc_loc}}</td>
+                        <td>{{i.dc_internship}}</td>
+                        <td>{{i.dc_Fr_Ex}}</td>
+                        {% if i.dc_status == 'Waiting' %}
+                          <td>{{i.dc_status}}&nbsp;-&nbsp; {{i.dc_reason}}</td>
+                        {% else %}
+                        <td>{{i.dc_status}}</td>
+                        {% endif %}
+                        
+                    </tr>
+                      
+                  {% endfor %}
+                {% else%}
+                    <h5 style="text-align:center">Nothing to display!</h5>
+                {% endif %}
+                  </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+
+<style>
+    #data-collect .reason 
+     {
+       display:none;
+     }
+     #data-collect .resonshow
+     {
+      display:block;
+     }
+   </style>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" target="_blank" rel="noreferrer noopener"></script>
+   <script>
+    $('#selectbox').change(function(){
+      var responseid=$(this).val();
+      console.log(responseid)
+      if(responseid == 'Waiting')
+      {
+        $('#reason').removeClass("reason");
+        $('#reason').addClass("resonshow");
+      }
+      else
+      {
+        $('#reason').removeClass("resonshow");
+        $('#reason').addClass("reason");
+      }
+
+    })
+
+   </script>
+
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script>
+     $(document).ready(function () {
+       $("#myInput").on("keyup", function () {
+         var value = $(this).val().toLowerCase();
+         $("#myTable tr").filter(function () {
+           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+         });
+       });
+     });
+     
+   
+   </script>
+
+{% endblock %}

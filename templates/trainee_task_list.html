@@ -1,0 +1,194 @@
+{%extends 'trainee_index.html'%} {% load static %} {% block content %}
+
+<style>
+    table tbody tr[data-href] {
+        cursor: pointer;
+    }
+</style>
+
+<div class="row" style="padding-top: 20px;">
+    <div class="col-2 col-sm-2 col-md-2 col-lg-2"></div>
+    <div class="col-12 col-sm-8 col-md-8 col-lg-8 grid-margin ">
+        <div class="card">
+            <div class="card-body" style="height:auto">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <h3 class="page-title ">Task List</h3>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12"><br></div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <form>
+                        <div class="input-group input-group-sm mb-3">
+                            <input type="text" class="form-control text-white" id="myInput" onkeyup="myFunction()" placeholder="Search" />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table" id="myTable">
+                        <thead>
+                            <tr data-href="#">
+                                <th class="text-white " style="padding-left:36px;">SNo</th>
+                                <th class="text-white">
+                                    Task
+                                </th>
+                                <th class="text-white">
+                                    Start Date
+                                </th>
+                                <th class="text-white">
+                                    End Date
+                                </th>
+                                <th class="text-white">
+                                    Status
+                                </th>
+                                <th class="text-white">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if mem %}
+                            <br> {% for i in mem %}
+                            <tr >
+
+
+                                <td style="padding-left:40px;">
+                                    {{forloop.counter }}
+                                </td>
+
+                                <td>
+                                    {{i.taskname}}
+                                </td>
+                                <td>
+                                    {{i.startdate|date:"d-m-Y"}}
+                                </td>
+                                <td>
+                                    {{i.enddate|date:"d-m-Y"}}
+                                </td>
+                                <td>
+                                    {% if i.task_status == '0' %}
+
+                                    <div class="badge badge-outline-warning" style="width: 135px;">
+                                        <i class="mdi mdi-playlist-remove"></i>&nbsp;
+                                        Not Submitted
+                                    </div>
+                                    
+                                    {% elif i.task_status == '3' %}
+
+                                    <div class="badge badge-outline-danger" style="width: 135px;">
+                                        <i class="mdi mdi-playlist-plus" data-toggle="modal" data-target="#correctiontask{{i.id}}"> &nbsp;Correction</i>&nbsp;
+                                        
+                                    </div>
+
+
+                                    {%else %}
+
+                                    <div class="badge badge-outline-success" style="width: 135px;">
+                                        <i class="mdi mdi-playlist-check"  data-toggle="modal" data-target="#correction{{i.id}}">  Submitted</i>&nbsp;
+                                       
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="badge badge-outline-success" style="width: 135px;">
+                                        <i class="mdi mdi-playlist-check"  > <a href="{% url 'trainee_task_details' i.id %}" class="text-success" style="text-decoration:none ;">Submitt</a></i>&nbsp;
+                                       
+                                    </div>
+                                    
+                                </td>
+                            </tr>
+                            {% endfor %}{% else %}
+                            <h5>Nothing to display...</h5>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% for i in mem %}
+<div class="modal" id="correctiontask{{i.id}}">
+    <div class="modal-dialog modal-xl">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 grid-margin stretch-card bg-dark text-light modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Task Corrections</h4>
+                <button type="button" style="color: white;" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+          
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    <div class="card" style="height:auto;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-1">
+                                    <table class="table">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Task</th>
+                                            <th scope="col">Correction</th>
+                                            <th scope="col">File</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for j in correction %}
+                                        {% if j.task_id.id == i.id %}
+                                          <tr>
+                                            <td>{{j.correctiondate|date:"y-m-d"}}</td>
+                                            <td>{{i.taskname}}</td>
+                                            <td>{{j.correction_description}}</td>
+                                            <td>
+                                                {% if j.correctionfiles %}
+                                                <a href="{{j.correctionfiles.url}}" class="btn btn-outline-primary" download="{{j.correctionfiles.url}}">Download</a></td>
+                                                {% endif %}
+                                          </tr>
+                                          {% endif %}
+                                          {% endfor %}
+                                         
+                                            
+                                        </tbody>
+                                      </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    
+</script>
+
+
+
+{%endblock%}

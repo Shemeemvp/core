@@ -1,0 +1,563 @@
+{% extends 'audit_module/audit_index.html' %} 
+{% load static %} 
+{% block content %}
+
+<style>
+    .traine
+    {
+        display: none;
+    }
+    .trainer
+    {
+        display: none;
+    }
+    a{
+        text-decoration: none;
+        color: #6C7293
+    }
+    a:hover{
+        text-decoration: none;
+        color: #e6e7ec
+    }
+        .iconpdf
+          {
+            font-size: 1.5rem;
+          }
+    
+</style>
+
+
+<div class="row">
+    <div class="col-sm-6 grid-margin"  onclick="trainee()">
+        <div class="card">
+            <a href="#" style="text-decoration: none; color: white;">
+                <div class="card-body">
+                    <h5>TRAINEES</h5>
+                    <div class="row">
+                        <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                            <div class="d-flex d-sm-block d-md-flex align-items-center">
+                                <h2 class="mb-0">{{trcount}}</h2>
+                                <!-- <p class="text-danger ms-2 mb-0 font-weight-medium">-2.1% </p> -->
+                            </div>
+                            <!-- <h6 class="text-muted font-weight-normal">2.27% Since last month</h6> -->
+                        </div>
+                        <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                            <i class="icon-lg mdi mdi-account-group text-success ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-sm-6 grid-margin" onclick="trainer()">
+        <div class="card">
+            <a href="#" style="text-decoration: none; color: white;">
+                <div class="card-body">
+                    <h5>TRAINERS</h5>
+                    <div class="row">
+                        <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                            <div class="d-flex d-sm-block d-md-flex align-items-center">
+                                <h2 class="mb-0">{{ num }}</h2>
+                                <!-- <p class="text-success ms-2 mb-0 font-weight-medium">+8.3%</p> -->
+                            </div>
+                            <!-- <h6 class="text-muted font-weight-normal"> 9.61% Since last month</h6> -->
+                        </div>
+                        <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                            <i class="icon-lg mdi mdi-account-group text-danger ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>   
+</div>
+
+<!------------- Trainer , Trainee Display -->
+
+<div class="row traine" id="taine">
+    <div class="col-sm-12 grid-margin">
+        <div class="card">
+            <a href="#" style="text-decoration: none; color: white;">
+                <div class="card-body">
+                    
+                    <div class="row">
+                        <div class="col-12 grid-margin table1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">all Department &nbsp; - &nbsp; New &nbsp; and  &nbsp;Ongoing  &nbsp;Trainees</h4>
+                                    <div class="p-2 text-end mb-4">
+                                        <button type="button" onclick="alltrainee()"  class="btn btn-outline-primary">Viem All Trainees</button>
+                                    </div>
+                                    <input type="text" class="form-control " onkeyup="myFunction()" id="search" name="search" autocomplete="off"
+                                        placeholder="Search...">
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table class="table" >
+                                            
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th> Full Name </th>
+                                                    <th> Joing date</th>
+                                                    <th> Department </th>
+                                                    <th> Hr Manager </th>
+                                                    <th>Report</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="myTable">
+                                                
+                                                {% for i in traines %}
+                                                    
+                                                <tr>
+                                      
+                                                    <td>{{forloop.counter}}</td>
+                                                   
+                                                    <td>{% if i.photo %}
+                                                        <img src="{{i.photo.url}}" alt="image" />
+                                                        {% endif %}
+                                                        <a href="{% url 'Audit_trainee_trainer_dashboard' i.id %}">
+                                                            <span class="ps-2">{{i.fullname}}</span>
+                                                        </a>
+                                                    </td>
+                                                    <td> {{i.joiningdate|date:"d-m-Y"}}</td>
+                                                    <td> {{i.department.department }} </td>
+                                                    <td> {{i.hrmanager }} </td>
+                                                    <td><a data-toggle="modal" data-target="#trainee_report{{i.id}}" class="text-danger"><i class="mdi mdi-file-pdf iconpdf"></i> </a></td>
+                                                   
+                                                    {% endfor %}
+                                                </tr>
+                                                
+                                                
+                                            </tbody>
+                           
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row trainer" id="tainer">
+    <div class="col-sm-12 grid-margin">
+        <div class="card">
+            <a href="#" style="text-decoration: none; color: white;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 grid-margin table1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">all Department &nbsp; - &nbsp; Trainers</h4>
+                                    <input type="text" class="form-control " onkeyup="myFunction_Trainers()" id="search_Trainers" name="search" autocomplete="off"
+                                        placeholder="Search...">
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table class="table" >
+                                            
+                                            <thead>
+                                                <tr>
+                                                   
+                                                    <th> Id </th>
+                                                    <th> Full Name </th>
+                                                    <th> Joing date</th>
+                                                    <th> Department </th>
+                                                    <th> Hr Manager</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="myTable_Trainers">
+                                                
+                                                {% for i in trainers %}
+
+                                                <tr>
+                                                    <td>{{forloop.counter}}</td>
+                                                   
+                                                    <td>{% if i.photo %}
+                                                        <img src="{{i.photo.url}}" alt="image" />&nbsp;
+                                                        {% endif %}
+                                                        <a href="{% url 'Audit_trainee_trainer_dashboard' i.id %}">
+                                                            <span class="ps-2">{{i.fullname}}</span>
+                                                        </a>
+                                                    </td>
+                                                    <td> {{i.joiningdate|date:"d-m-Y"}}</td>
+                                                    <td> {{i.department.department }} </td>
+                                                    <td> {{i.hrmanager }} </td> 
+                                                </tr>
+                                                {% endfor %}
+                                                
+                                                
+                                            </tbody>
+                           
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!------------- Trainer , Trainee Display -->
+
+<div class="row traine" id="alltaine">
+    <div class="col-sm-12 grid-margin">
+        <div class="card">
+            <a href="#" style="text-decoration: none; color: white;">
+                <div class="card-body">
+                    
+                    <div class="row">
+                        <div class="col-12 grid-margin table1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">all Department &nbsp; - &nbsp;Trainees</h4>
+                                    <div class="p-2 text-end mb-4">
+                                        <button type="button" onclick="alltrainee()"  class="btn btn-outline-primary">Viem All Trainees</button>
+                                    </div>
+                                    <input type="text" class="form-control " onkeyup="myFunction()" id="search" name="search" autocomplete="off"
+                                        placeholder="Search...">
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table class="table" >
+                                            
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th> Full Name </th>
+                                                    <th> Joing date</th>
+                                                    <th> Department </th>
+                                                    <th> Hr Manager </th>
+                                                    <th>Report</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="myTable">
+                                                
+                                                {% for i in alltraines %}
+                                                    
+                                                <tr>
+                                      
+                                                    <td>{{forloop.counter}}</td>
+                                                   
+                                                    <td>{% if i.photo %}
+                                                        <img src="{{i.photo.url}}" alt="image" />
+                                                        {% endif %}
+                                                        <a href="{% url 'Audit_trainee_trainer_dashboard' i.id %}">
+                                                            <span class="ps-2">{{i.fullname}}</span>
+                                                        </a>
+                                                    </td>
+                                                    <td> {{i.joiningdate|date:"d-m-Y"}}</td>
+                                                    <td> {{i.department.department }} </td>
+                                                    <td> {{i.hrmanager }} </td>
+                                                    <td><a data-toggle="modal" data-target="#alltrainee_report{{i.id}}" class="text-danger"><i class="mdi mdi-file-pdf iconpdf"></i> </a></td>
+                                                   
+                                                    {% endfor %}
+                                                </tr>
+                                                
+                                                
+                                            </tbody>
+                           
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!--=============================Trainee Report modal==================================== -->
+
+{% for i in traines %}
+<div class="modal" id="trainee_report{{i.id}}">
+    <div class="modal-dialog">
+        <div class="col-12 grid-margin stretch-card bg-dark text-light modal-content">
+        <!-- Modal Header -->
+        <a  class="text-danger" href="" style="cursor:pointer"><i class=""></i> </a>
+            <form action="{% url 'audit_trainee_reportPDF' i.id %}" method="post" enctype="multipart/form-data" autocomplete="off">
+                {%csrf_token%}
+                    <div class="modal-header">
+                        <h4 class="modal-title">Report &nbsp;{{i.fullname}}</h4>
+                        <button type="submit" style="color: white" class=" btn close btn-outline " data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="row">
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card p-3" >
+                                <div class="card-body">
+                                  
+                                    <label class="form-label mt-2" style="font-size:13px ;"> From Date</label>
+                                    <input type="date" class="mt-2 mb-2 form-control" name="sdate" required>
+                                    <label class="form-label mt-2"style="font-size:13px ;">To Date</label>
+                                    <input type="date" class="mt-2 mb-2 form-control" name="edate" required >
+                            
+                                  
+                                 
+                                    <div class="row g-2 mt-3">
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"  name="trainee_project">
+                                                <label class="form-check-label" for="">Project Details </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"  name="tainee_task">
+                                                <label class="form-check-label" for="">Task Details </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"  name="trainee_topics">
+                                                <label class="form-check-label" for="">Topics Details </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"    name="trainee_probation">
+                                                <label class="form-check-label" for="">Probation Details</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"    name="trainee_leave">
+                                                <label class="form-check-label" for="">Leave Details</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"    name="trainee_feedbak">
+                                                <label class="form-check-label" for="">FeedBack Details</label>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 col-sm-12 text-center">
+                                        <button type="submit" class="btn btn-outline-primary mt-4"><i class="mdi mdi-file-pdf iconpdf text-danger"></i>Download</button>
+                                    </div>
+                                      
+                                
+                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{%endfor%}
+<!--========================== modal end =============================================== -->
+
+{% for i in alltraines %}
+<div class="modal" id="alltrainee_report{{i.id}}">
+    <div class="modal-dialog">
+        <div class="col-12 grid-margin stretch-card bg-dark text-light modal-content">
+        <!-- Modal Header -->
+        <a  class="text-danger" href="" style="cursor:pointer"><i class=""></i> </a>
+            <form action="{% url 'audit_trainee_reportPDF' i.id %}" method="post" enctype="multipart/form-data" autocomplete="off">
+                {%csrf_token%}
+                    <div class="modal-header">
+                        <h4 class="modal-title">Report &nbsp;{{i.fullname}}</h4>
+                        <button type="submit" style="color: white" class=" btn close btn-outline " data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="row">
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card p-3" >
+                                <div class="card-body">
+                                  
+                                    <label class="form-label mt-2" style="font-size:13px ;"> From Date</label>
+                                    <input type="date" class="mt-2 mb-2 form-control" name="sdate" required >
+                                    <label class="form-label mt-2"style="font-size:13px ;">To Date</label>
+                                    <input type="date" class="mt-2 mb-2 form-control" name="edate" required>
+                            
+                                  
+                                 
+                                    <div class="row g-2 mt-3">
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"  name="trainee_project">
+                                                <label class="form-check-label" for="">Project Details </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"  name="tainee_task">
+                                                <label class="form-check-label" for="">Task Details </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"  name="trainee_topics">
+                                                <label class="form-check-label" for="">Topics Details </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"    name="trainee_probation">
+                                                <label class="form-check-label" for="">Probation Details</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"    name="trainee_leave">
+                                                <label class="form-check-label" for="">Leave Details</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="" value="1"    name="trainee_feedbak">
+                                                <label class="form-check-label" for="">FeedBack Details</label>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 col-sm-12 text-center">
+                                        <button type="submit" class="btn btn-outline-primary mt-4"><i class="mdi mdi-file-pdf iconpdf text-danger"></i>Download</button>
+                                    </div>
+                                      
+                                
+                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{%endfor%}
+
+<script>
+    function trainee() {
+      var x = document.getElementById("taine");
+      var Y = document.getElementById("tainer");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        Y.style.display = "none";
+      } else {
+        x.style.display = "none";
+      }
+    }
+    function trainer() {
+        var x = document.getElementById("tainer");
+        var Y = document.getElementById("taine");
+        if (x.style.display === "none") {
+          x.style.display = "block";
+          Y.style.display = "none";
+        } else {
+          x.style.display = "none";
+        }
+      }
+      function alltrainee() {
+        var x = document.getElementById("alltaine");
+        var Y = document.getElementById("tainer");
+        var z = document.getElementById("taine");
+        if (x.style.display === "none") {
+          x.style.display = "block";
+          Y.style.display = "none";
+          z.style.display = "none";
+        } else {
+          x.style.display = "none";
+        }
+      }
+</script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+         
+    $(document).ready(function () {
+        $("#search_Trainers").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable_Trainers tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+    function myFunction_Trainers() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search_Trainers");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable_Trainers");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td)
+           {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) 
+            {
+              tr[i].style.display = "";
+            } 
+            else
+            {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+</script>
+<script>
+
+        
+    $(document).ready(function () {
+        $("#search").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td)
+           {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) 
+            {
+              tr[i].style.display = "";
+            } 
+            else
+            {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+
+   
+
+
+  $(document).on('click', '.confirm-delete', function(){
+      
+    return confirm('Are you sure you want to delete this?');
+    
+})
+</script>
+
+
+{% endblock %}

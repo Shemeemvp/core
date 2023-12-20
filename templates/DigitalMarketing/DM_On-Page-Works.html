@@ -1,0 +1,134 @@
+{% extends 'DigitalMarketing/DM_devindex.html' %} 
+{% load static %}
+
+{% block content %}
+
+
+<div class="card" id="onpage">
+    <h4 class="text-center m-4">ON PAGE WORKS</h4>
+    <form action="{% url 'dev_onpage_save' task.id %}" method="post">
+        {% csrf_token %}
+        <div class="input-group p-3 m-2">
+            <input type="date" class="form-control" name="op_date" placeholder="DATE" style=" color: #fff;">
+        </div>
+
+        <div class="input-group p-3  m-2">
+            <input type="url" class="form-control"  name="op_url" placeholder="PASTE PAGE URL" style=" color: #fff;">
+        </div>
+        <div class="input-group p-3  m-2">
+            <textarea  class="form-control"  name="op_work" style=" color: #fff; height:150px;">WORK DETAILS !</textarea>
+        </div>
+        <div class="input-group p-3 m-2">
+            <select id="Employee" class="form-control"  name="op_status" style="background-color:#434a54;border:none; color: #fff;">
+                <option selected class="p-2 m-2">REMARKS/STATUS</option>
+                <option class="p-2 m-2">In edit</option>
+                <option class="p-2 m-2">Done</option>
+                <option class="p-2 m-2">Uploaded</option>
+            </select>
+        </div>
+
+            <div class="p-3 m-3 text-end">
+                <button type="submit" class="btn btn-success">SAVE</button>
+            </div>
+
+    </form>
+</div>
+
+<br>
+
+<div class="row">
+       
+<div class="col-12 grid-margin">
+  <div class="card">
+    <div class="card-body">
+        <h4 class="text-center mb-4">On Page Works</h4>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <form>
+              <div class="input-group input-group-sm mb-3">
+                <input
+                  type="text"
+                  class="form-control text-white"
+                  id="myInput"
+                  onkeyup="myFunction()"
+                  placeholder="Search . . ."
+                  style="border: green"
+                />
+              </div>
+            </form>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table" id="myTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Sl no</th>
+                        <th scope="col">Date</th>
+                       
+                        <th scope="col">Url</th>
+                        <th scope="col">Work Details</th>
+                        <th scope="col">Remarks/Status</th>
+                        <th scope="col">Action</th>
+   
+                      </tr>
+                  </thead>
+              
+            {% if onpage %}
+              
+              <tbody>
+                {% for i in onpage %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{i.op_date}}</td>
+                    <td>{{i.op_url}} </td>
+                    <td>{{i.op_work}}</td>
+                    <form action="{% url 'dev_onpge_edit_save' i.id %}" method="post">
+                      {% csrf_token %}
+                      <td>
+                        <select id="Employee" class="form-control"  name="op_editstatus" style="background-color:#434a54;border:none; color: #fff;">
+                          <option selected class="p-2 m-2">{{i.op_status}}</option>
+                          <option class="p-2 m-2">In edit</option>
+                          <option class="p-2 m-2">Done</option>
+                          <option class="p-2 m-2">Uploaded</option>
+                        </select>
+                      </td>
+                      <td><button type="submit" class="btn btn-outline-warning mdi mdi-grease-pencil">&nbsp;Save</button></td>
+
+                    </form>
+                     
+                    
+                  
+                   
+                </tr>
+                  
+              {% endfor %}
+            {% else%}
+                <h5 style="text-align:center">Nothing to display!</h5>
+            {% endif %}
+              </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script>
+     $(document).ready(function () {
+       $("#myInput").on("keyup", function () {
+         var value = $(this).val().toLowerCase();
+         $("#myTable tr").filter(function () {
+           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+         });
+       });
+     });
+     
+   
+   </script>
+
+{% endblock %}

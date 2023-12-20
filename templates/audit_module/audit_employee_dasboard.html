@@ -1,0 +1,748 @@
+{% extends 'audit_module/audit_index.html' %} 
+{% load static %} 
+{% block content %}
+<style>
+    .btn{
+        color: #fff;
+    }
+
+
+   
+    .answer2 { display:none; }
+    .answer3 { display:none; }
+    .answer4 { display:none; }
+    .answer5 { display:none; }
+    .answer6 { display:none; }
+
+      
+    
+</style>
+
+
+
+<div class="row">
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <center>
+                    <h3 class="card-title">PROFILE</h3>
+                    {% if emp.photo %}
+                    <img src="{{ emp.photo.url }}" alt="image" style="border-radius: 50%;" width="130" height="130" />
+                    {% endif %}
+                    <!-- <canvas id="transaction-history" class="transaction-chart"></canvas> -->
+                    <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                        <div class="text-md-center text-xl-left">
+
+                            <h6 class="mb-1">Joining Date</h6>
+                            <!-- <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p> -->
+                        </div>
+                        <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
+                            <h6 class="text-muted mb-0">{{ emp.joiningdate|date:"d-m-Y" }}</h6>
+                        </div>
+                    </div>
+                    <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                        <div class="text-md-center text-xl-left">
+                            <h6 class="mb-1">Designation</h6>
+                            <!-- <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p> -->
+                        </div>
+                        <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
+                            <h6 class="text-muted mb-0">{{ emp.designation }}</h6>
+                        </div>
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <p class="text-muted mb-1">Your data status</p>
+                </div>
+                <div class="row" style="margin-top: 30px;">
+                    <div class="col-12">
+                        <div class="preview-list">
+                            <div class="preview-item border-bottom">
+                                <div class="preview-thumbnail">
+                                    <!-- <div class="preview-icon bg-primary">
+                      <i class="mdi mdi-file-document"></i>
+                    </div> -->
+                                </div>
+                                <div class="preview-item-content d-sm-flex flex-grow">
+                                    <div class="flex-grow">
+                                        <h6 class="preview-subject">NAME</h6>
+                                        <!-- <p class="text-muted mb-0">Broadcast web app mockup</p> -->
+                                    </div>
+                                    <div class="me-auto text-sm-right pt-2 pt-sm-0">
+                                        <!-- <p class="text-muted">15 minutes ago</p>
+                      <p class="text-muted mb-0">30 tasks, 5 issues </p> -->
+                                        <h6 class="preview-subject">{{ emp.fullname }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-item border-bottom">
+                                <div class="preview-thumbnail">
+                                    <!-- <div class="preview-icon bg-success">
+                      <i class="mdi mdi-cloud-download"></i>
+                    </div> -->
+                                </div>
+                                <div class="preview-item-content d-sm-flex flex-grow">
+                                    <div class="flex-grow">
+                                        <h6 class="preview-subject">DEPARTMENT</h6>
+                                        <!-- <p class="text-muted mb-0">Upload new design</p> -->
+                                    </div>
+                                    <div class="me-auto text-sm-right pt-2 pt-sm-0">
+                                        <!-- <p class="text-muted">1 hour ago</p>
+                      <p class="text-muted mb-0">23 tasks, 5 issues </p> -->
+                                        <h6 class="preview-subject">{{ emp.department }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-item border-bottom">
+                                <div class="preview-thumbnail">
+                                    <!-- <div class="preview-icon bg-info">
+                      <i class="mdi mdi-clock"></i>
+                    </div> -->
+                                </div>
+                                <div class="preview-item-content d-sm-flex flex-grow">
+                                    <div class="flex-grow">
+                                        <h6 class="preview-subject">EMAIL</h6>
+                                        <!-- <p class="text-muted mb-0">New project discussion</p> -->
+                                    </div>
+                                    <div class="me-auto text-sm-right pt-2 pt-sm-0">
+                                        <!-- <p class="text-muted">35 minutes ago</p>
+                      <p class="text-muted mb-0">15 tasks, 2 issues</p> -->
+                                        <h6 class="preview-subject">{{ emp.email }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-item border-bottom">
+                                <div class="preview-thumbnail">
+                                    <!-- <div class="preview-icon bg-danger">
+                      <i class="mdi mdi-email-open"></i>
+                    </div> -->
+                                </div>
+                                <div class="preview-item-content d-sm-flex flex-grow">
+                                    <div class="flex-grow">
+                                        <h6 class="preview-subject">CONTACT NUMBER</h6>
+                                        <!-- <p class="text-muted mb-0">Sent release details to team</p> -->
+                                    </div>
+                                    <div class="me-auto text-sm-right pt-2 pt-sm-0">
+                                        <!-- <p class="text-muted">55 minutes ago</p>
+                      <p class="text-muted mb-0">35 tasks, 7 issues </p> -->
+                                        <h6 class="preview-subject">{{ emp.mobile }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-item">
+                                <div class="preview-thumbnail">
+                                    <!-- <div class="preview-icon bg-warning">
+                      <i class="mdi mdi-chart-pie"></i>
+                    </div> -->
+                                </div>
+                                <div class="preview-item-content d-sm-flex flex-grow">
+                                    <div class="flex-grow">
+                                        <!-- <h6 class="preview-subject">JIONING DATE</h6> -->
+                                        <!-- <p class="text-muted mb-0">New application planning</p> -->
+                                    </div>
+                                    <div class="me-auto text-sm-right pt-2 pt-sm-0">
+                                        <!-- <p class="text-muted">50 minutes ago</p>
+                      <p class="text-muted mb-0">27 tasks, 4 issues </p> -->
+                                        <!-- <h6 class="preview-subject">15/02/2022</h6> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+
+<div class="row text-center">
+    <div class="col-lg-6 col-sm-12"> 
+        {% if emp.employee_type == '0'%}
+         <a href="{% url 'Audit_trainee_dashboard' emp.id %}" class="btn btn-primary" >Go To Training Section
+            <i class="mdi mdi-arrow-right-bold-circle mdi-24px"></i>
+         </a>
+        {% endif %}
+    </div>
+    <div class="col-lg-6 col-sm-12"> 
+        {% if emp.designation.designation == 'trainer' %}
+        <a href="{% url 'Audit_trainee_trainer_dashboard' emp.id %}" class="btn btn-primary mb-2" >Go To Trainer Section
+           <i class="mdi mdi-arrow-right-bold-circle mdi-24px"></i>
+        </a>
+        {% endif %}
+        {% if emp.designation.designation == 'team leader' %}
+        <a href="{% url 'Audit_tl' emp.id %}" class="btn btn-primary mt-2" >Go To Team Leader Section
+            <i class="mdi mdi-arrow-right-bold-circle mdi-24px"></i>
+         </a>
+        {% endif %}
+       
+   </div>
+</div>
+
+
+
+<br>
+
+
+<br>
+<div class="row">
+    <div class="col-lg-8 col-sm-12">
+        <div class="form-check mt-3 ">
+            <input class="form-check-input" type="checkbox" id="check2" name="check2" value="1" onchange="valueChanged()">
+            <label class="form-check-label"><h4>Project</h4></label>
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-12">
+        {% if emp.designation.designation == 'developer' or  emp.designation.designation == 'team leader' or emp.designation.designation == 'tester' %}
+        <p>Delay &nbsp;Of&nbsp; This&nbsp; Month&nbsp;&nbsp;-&nbsp;&nbsp;{{count}}</p>
+        {% endif %}
+    </div>
+</div>
+
+<hr>
+<div class="row answer2">
+    {% if  emp.designation.designation == 'project manager'  %}
+    {% for i in devp %}
+
+    <div class="col-lg-12  grid-margin">
+        <a href="{% url 'Audit_project_tl' i.id  %}" style="text-decoration: none;">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                  <div class="d-flex d-sm-block d-md-flex align-items-center">
+                    <h4 class="mb-0" style="color: white;">{{i.project}}</h4>
+                  </div>
+                </div>
+                <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                  <i class="icon-lg mdi mdi-arrange-send-backward text-primary ms-auto"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+
+
+
+        
+    {% endfor %}
+    
+    {% else %}
+    {% for dp in devp %}
+    <div class="col-4 col-md-12 col-sm-12 grid-margin stretch-card">
+        <div class="card">
+            <a href="{% url 'Audit_DEVtable' dp.project_id emp.id %}" class="text-decoration-none text-white ">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-8 col-sm-12  my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                                        
+                            {% for p in pros %}   
+                            {% if dp.project_id == p.id %}           
+
+                            <h4 class="mb-0" style="color:white;">{{p.project}}</h4>
+
+                            {% endif %}
+                                            
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-12 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-arrange-send-backward text-primary ms-auto"></i>
+                    </div>
+                </div>
+            </div>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+   
+
+<br>
+<div class="row">
+    <div class="col-lg-8 col-sm-12">
+        <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" id="check3" name="check3" value="1" onchange="valueChanged()">
+            <label class="form-check-label"><h4>Leaves&nbsp; and &nbsp; Attendence</h4></label>
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-12"><p>Total&nbsp; Leaves &nbsp;Of&nbsp; This&nbsp; Month&nbsp;&nbsp;-&nbsp;&nbsp;{{leaves}}</p></div>
+
+
+<hr>
+<div class="row mt-1 answer3">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Leaves </h4>
+                <input type="text" class="form-control " onkeyup="myFunction_leave()" id="leave_search" name="search" autocomplete="off"
+                    placeholder="Search...">
+                <br>
+                <div class="table-responsive">
+                    <table class="table" >
+                        
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>From Date </th>
+                                <th>To Date </th>
+                                <th> Reason</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="myTable_leave">
+                        {% if lev %}
+                            {% for i in lev %}
+                                
+                            <tr>
+                  
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.from_date|date:"d-m-Y"}}</td>
+                                <td>{{i.to_date|date:"d-m-Y"}}</td>
+                                <td>{{i.reason}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr><h4 class="text-center">Nothing To Display....</h4></tr>
+                        {% endif %} 
+                            
+                        </tbody>
+       
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-1 answer3">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Attendences </h4>
+                <input type="text" class="form-control " onkeyup="myFunction_attened()" id="attend_search" name="search" autocomplete="off"
+                    placeholder="Search...">
+                <br>
+                <div class="table-responsive">
+                    <table class="table" >
+                        
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th> Date </th>
+                                <th> Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myTable_attend">
+                        {% if attend %}
+                            {% for i in attend %}
+                                
+                            <tr>
+                  
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.date|date:"d-m-Y"}}</td>
+                                <td>
+                                    {% if i.attendance_status == '1' %}
+                                    <p class="text-success">Present</p>
+                                    {% else %}
+                                    <p class="text-danger">Absent</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr><h4 class="text-center">Nothing To Display....</h4></tr>
+                        {% endif %} 
+                            
+                        </tbody>
+       
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <div class="form-check mt-3 ">
+            <input class="form-check-input" type="checkbox" id="check4" name="check4" value="1" onchange="valueChanged()">
+            <label class="form-check-label"><h4>Salary</h4></label>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row mt-1 answer4">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Salary </h4>
+                <input type="text" class="form-control " onkeyup="myFunction()" id="search" name="search" autocomplete="off"
+                    placeholder="Search...">
+                <br>
+                <div class="table-responsive">
+                    <table class="table" >
+                        
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th> From Date </th>
+                                <th> To Date</th>
+                                <th> Net Salary</th>
+                                <th>Hra</th>
+                                <th> Conveyns</th>
+                                <th> Tax</th>
+                                <th> Incentives</th>
+                                <th> DA</th>
+                                <th>Other_allovance</th>
+                                <th> Leaves</th>
+                                <th> Delay</th>
+                                <th> Final Salary </th>
+                               
+                                <th> Action </th>
+                              
+                            </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% if sala %}
+                            {% for i in sala %}
+                                
+                            <tr>
+                  
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.fromdate|date:"d-m-Y"}}</td>
+                                <td>{{i.todate|date:"d-m-Y"}}</td>
+                                <td>{{i.basic_salary}}</td>
+                                <td>{{i.hra}}</td>
+                                <td>{{i.conveyns}}</td>
+                                <td>{{i.tax}}</td>
+                                <td>{{i.incentives}}</td>
+                                <td>{{i.da}}</td>
+                                <td>{{i.other_allovance}}</td>
+                                <td>{{i.leavesno}}</td>
+                                <td>{{i.delay}}</td>
+                                <td>{{i.net_salary}}</td>
+                               
+                                <td><button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#testerstatus{{i.id}}">Hold</button></td>
+                               
+                                {% endfor %}
+                            </tr>
+                        {% else %}
+                        <tr><h4 class="text-center">Nothing To Display....</h4></tr>
+                        {% endif %} 
+                            
+                        </tbody>
+       
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br>
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" id="check5" name="check5" value="1" onchange="valueChanged()">
+            <label class="form-check-label"><h4>Issues Reported</h4></label>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row mt-1 answer5">
+   
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Issues Reported</h4>
+               
+                <br>
+                <div class="table-responsive">
+                    <table class="table" >
+                        
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th> Date </th>
+                                <th> Issue</th>
+                                <th> To</th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myTable">
+                            
+                            {% for i in rep %}
+                                
+                            <tr>
+                  
+                                <td>{{forloop.counter}}</td>
+                                <td> {{i.reported_date|date:"d-m-Y"}}</td>
+                                <td>{{i.issue}}</td>
+                                <td>{{i.reported_to.fullname}}</td>
+                                <td>{{i.reply}}</td>
+                                <td></td>
+
+                                {% endfor %}
+                            </tr>
+                            
+                            
+                        </tbody>
+       
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+              <h5>Remark / Action Taken </h5>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+              <form>
+                <div class="input-group input-group-sm mb-3">
+                  <input type="text" class="form-control text-light" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
+              title="Type in a name" style="color:white;">
+  
+                  
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table " id="myTables">
+              <thead>
+                <tr data-href="#">
+                  <th>SlNo</th>
+                  <th>Date</th>
+                  <th>Given By</th>
+                  <th>Designation</th>
+                  <th>Name</th>
+                  <th>Remark/Action</th>
+                  <th>Designation</th>
+                  <th>Department</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in act %}
+                <tr data-href="{% url 'Audit_employee_dashbord' i.id %}">
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{i.at_date|date:"d-m-Y"}}</td>
+                  <td>{{i.atby.fullname}}</td>
+                  <td>{{i.atby.designation}}</td>
+                  <td>{{i.atemp.fullname}}</td>
+                  <td>{{i.at_remark}}</td>
+                  <td>{{i.atdesig.designation}}</td>
+                  <td>{{i.atdep.department}}</td>
+  
+                  
+                </tr>
+                {% endfor %}
+                
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  
+{% for dp in sala %}
+  
+<!-- pop up window for tester status -->
+<div class="modal fade" id="testerstatus{{dp.id}}">
+    <form action="{% url 'Audit_salary_hold' dp.id %}" method="post">
+        {% csrf_token %}
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="modal-header" style="border-bottom: 0 none;">
+        <h5 class="modal-title text-info">Hold</h5>
+        <button type="button" class="close text-light" data-dismiss="modal" aria-label=""
+          style="background-color: #191c24;border:none; float: right;font-size: 20px;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="table-responsive mt-3 mb-3 container">
+
+        <table class="table   table-bordered ">
+          <thead style="background-color: black;">
+            <tr>
+              <th scope="col" style="color:#6C7293;">Date</th>
+              <th scope="col" style="color:#6C7293;">Reason</th>
+              <th scope="col" style="color:#6C7293;">Amount</th>
+              <th scope="col" style="color:#6C7293;">Action</th>
+          </thead>
+
+          <tbody>
+
+            {% for i in hld %}
+
+            <tr>
+              <td style="color:white;">{{i.hddate|date:"d-m-Y"}}</td>
+              <td style="color:white;">{{i.sal_reason}}</td>
+              <td style="color:white;">{{i.sal_amount}}</td>
+              
+            </tr>
+            {% endfor %}
+
+            <tr>
+              <td style="color:white;">{{time|date:"d-m-Y"}}</td>
+              <td style="color:white;"><textarea name="rea_hold" class="form-control-sm bg-transparent text-light"
+                  cols="25" rows="7" placeholder="Hold Reason" required></textarea></td>
+              <td style="color:white;"><textarea name="amount_hold" class="form-control-sm bg-transparent text-light"
+                  cols="25" rows="7" placeholder="Amount"></textarea></td>
+              <td class="text-info"><button type="submit" class="btn badge-outline-primary">submit</button></td>
+
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+      
+       
+    </div>
+
+  </div>
+</form>
+</div>
+
+{% endfor %}
+
+
+
+
+
+<script type="text/javascript">
+    function valueChanged()
+    {
+        if($('#check1').is(":checked"))   
+            $(".answer1").show();
+        else
+            $(".answer1").hide();
+
+        if($('#check2').is(":checked"))   
+            $(".answer2").show();
+        else
+            $(".answer2").hide();
+
+        if($('#check3').is(":checked"))   
+            $(".answer3").show();
+        else
+            $(".answer3").hide();
+
+        if($('#check4').is(":checked"))   
+            $(".answer4").show();
+        else
+            $(".answer4").hide();
+
+        if($('#check5').is(":checked"))   
+            $(".answer5").show();
+        else
+            $(".answer5").hide();
+
+        
+    }
+</script>
+<script>
+         
+    $(document).ready(function () {
+        $("#attend_search").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable_attend tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+    function myFunction_attened() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("attend_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable_attend");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td)
+           {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) 
+            {
+              tr[i].style.display = "";
+            } 
+            else
+            {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+</script>
+
+<script>
+         
+    $(document).ready(function () {
+        $("#leave_search").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable_leave tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+    function myFunction_leave() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("leave_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable_leave");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td)
+           {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) 
+            {
+              tr[i].style.display = "";
+            } 
+            else
+            {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+</script>
+
+
+{% endblock%}

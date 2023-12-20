@@ -1,0 +1,208 @@
+{%load static%}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>ALTOS CORE</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+      
+            }
+            .header {
+                font-size: 18px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .container h4{
+                color: #007cae;
+            }
+            .title {
+                font-size: 25px;
+                font-weight: 200;
+                color: #007cae;
+               padding:2px
+            }
+            .title b {
+                color: #007cae;
+            }
+            .details {
+                padding:1px;
+                text-align: left !important;
+                
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            .details .content{
+                text-align: justify;
+                font-size: 20px !important;
+                line-height: 30px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                
+
+            }
+            .images_contain
+            {
+                display: flex;
+                justify-content: center;
+                text-align: justify;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="images_contain">   
+            
+           <div>
+            <img src="media/images/companylogo.png" height="75" width="200"> 
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+            Date:{{date|date:'d-m-Y'}}
+               
+            </div>  
+        </div>
+       
+               
+
+ 
+    
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'style="color: black"><b>{{projects.project}}</b></p> 
+                <p class=''style="color: black; font-size:15px;"> Start Date : {{projects.startdate}}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                     End Date : {{projects.enddate}}</p>
+                     
+              
+            </div>
+            <h6>Front End : {{project_doc.doc_project_frontend}}
+                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               
+                Back End :{{project_doc.doc_project_backend}}</h6>
+            
+        <div>
+            <hr>
+
+            <div class="container">
+                <div class="row">
+                    <h4  class="title">Project Descriptions</h4>
+                   {% for i in project_module %} 
+                    <div class="col-lg-12">
+                        <h2 class="">Module :&nbsp;<span  style="color: #007cae;">{{i.module}}</span></h2>
+                        <p><b>Module Desecription :</b>&nbsp;  {{i.description}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+    
+            </div>    
+
+          
+            {% if p2 == '1' %}
+            <hr>
+            <div class="container">
+                <div class="row">
+                    <h4  class="title">Project Corrections</h4>
+                   {% for i in project_correction %} 
+                    <div class="col-lg-12">
+                        {% if p1 == '1' %} 
+                            <p> start date: {{i.project_cu_start}} &nbsp;&nbsp;&nbsp;&nbsp; End Date: {{i.project_cu_end}}&nbsp;&nbsp; &nbsp;&nbsp;
+                        {% endif %}
+                        {% if p3 == '1' %}
+                            Days to Complete:&nbsp; {{i.project_cu_wdays}} 
+                        {% endif %}
+                        </p>
+
+                        <h2 class="">Module :&nbsp;<span style="color: #007cae;">{{i.project_cu_module}}</span></h2>
+                        <p><b>Correction Description :</b>&nbsp; {{i.project_cu_descrip}}</p>
+                        <p><b>Previous Content:</b> {{i.project_cu_olddescrip}}</p>
+                        {% if i.project_oldui %}
+                            <img src="{{path}}{{i.project_oldui.url}}">
+                        {% endif %}
+                        <p><b>Corrected Content:</b> {{i.project_cu_newdescrip}}</p>
+                        {% if i.project_cu_newui %}
+                            <img src="{{path}}{{i.project_cu_newui.url}}">
+                        {% endif %}
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                       
+                    </div>
+                    {% endfor %}
+                </div>
+    
+            </div>  
+            {% endif %}
+
+            <hr>
+
+            <div class="container">
+                <div class="row">
+                    <h4  class="title">Project Updations</h4>
+                   {% for i in project_updation %} 
+                    <div class="col-lg-12">
+                        {% if p1 == '1' %} 
+                        <p> Date: {{i.project_date}} &nbsp;&nbsp; &nbsp;&nbsp;
+                        {% endif %}
+                        {% if p3 == '1' %} 
+                            Days to Complete:&nbsp; {{i.project_cu_wdays}}
+                        {% endif%}
+                        </p>
+                        <h2 class="">Task :&nbsp;<span style="color: #007cae;">{{i.project_cu_module}}</span></h2>
+                        <p><b>Updation Description :</b>&nbsp;  {{i.project_cu_descrip}}</p>
+                       <!-- <p><b>Previous Content:</b> {{i.project_cu_olddescrip}}</p>
+                        {% if i.project_oldui %}
+                            <img src="{{path}}{{i.project_oldui.url}}">
+                        {% endif %}-->
+                        <p><b>Corrected Content:</b> {{i.project_cu_newdescrip}}</p>
+                        {% if i.project_cu_newui %}
+                            <img src="{{path}}{{i.project_cu_newui.url}}">
+                        {% endif %}
+                        <p><b>Corrected Content:</b> {{i.project_cu_newdescrip}}</p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                      
+                    </div>
+                    {% endfor %}
+                </div>
+    
+            </div>  
+            {% if p4 == '1' %}
+<hr>
+            <div class="container">
+                <div class="row">
+                    <h4  class="title">Project Other Details </h4>
+                    <div class="col-lg-12">
+                      
+                        <h5>Employees Worked</h5>
+                        {% for i in devp %}
+                        {% for j in doc_user %}
+                        {% if j.id == i.developer %}
+                        <p>{{ forloop.counter }}. {{j.fullname}}</p>
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                        <h5>Total Days To Complete :{{work_days}} Days</h5>
+                        
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        
+ 
+    <script>
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+         document.getElementById("currentDate").value = date;
+    </script>
+        
+    </body>
+</html>

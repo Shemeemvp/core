@@ -1,0 +1,228 @@
+{% extends 'BRadmin_index.html' %}
+{% load static %}
+{% block content %}
+
+
+<style>
+table tr[data-href] {
+    cursor: pointer;
+}
+
+.blink-success
+{
+  animation: blinker 1.5s linear infinite;
+    color: rgb(211, 225, 214);
+    font-family: sans-serif;
+    font-size: 1em;
+    font-weight: 700;
+}
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+</style>
+
+<div class="row ">
+  <div class="col-12 grid-margin">
+    <div class="card">
+      <div class="card-body">
+        <div class="row" >
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <h4>Developers Are Not Assign</h4>
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+            <form>
+              <div class="input-group input-group-sm mb-3">
+                <input type="text" class="form-control" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
+                title="Type in a name" style="color:white;">
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- table start hear --> 
+
+          <div class="table-responsive">
+            <table class="table " id="myTable">
+              <thead  >
+              
+                <tr data-href="#">
+                  <th style="padding-left:30px;"> Developer </th>
+                  <th style="padding-left:50px;"> Team Leader</th>
+                  <th style="padding-left:50px;"> Project Manager</th>
+                  <th style="padding-left:50px;"> Request</th>
+                  <th style="padding-left:50px;"> Leave</th>
+
+                </tr>
+              </thead>
+              <tbody>
+
+                
+                {% for t in dev %}
+                <tr data-href="#">
+                 
+                  <td> {{t.fullname}}</td>
+                 
+                  <td>
+                    {% for j in tl %}
+                    {% if j.id == t.tl_id %}
+                        {{j.fullname}}
+                    {% endif %}
+                    {% endfor %}
+                  </td>
+                
+                  <td >
+                    {% for p in pman %}
+                    {% if t.projectmanager_id == p.id %}
+                        {{p.fullname}}
+                    {% endif %}
+                    {% endfor %}
+                   
+                  </td>
+                  <td>
+                    {% for r in req %}
+                      {% if t.id == r.wrk_develp_id %}
+                       
+                          <p class="blink-success">Developer Work Requested</p>
+                        
+                      {% endif %}
+                      
+                    {% endfor %}
+
+                  </td>
+                  <td><button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal{{t.id}}">Mark Leave</button></td>
+                  
+                </tr> 
+                {% endfor %}               
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+{% for t in dev %}
+<!-- Modal -->
+<div class="modal" id="myModal{{t.id}}">
+    <div class="modal-dialog">
+        <div class="col-12 grid-margin stretch-card bg-dark text-light modal-content">
+        <!-- Modal Header -->
+            <form action="{% url 'BRadminleaveupdate' %}" method="post" enctype="multipart/form-data" autocomplete="off">
+                {%csrf_token%}
+                    <div class="modal-header">
+                        <h4 class="modal-title">Leave Mark</h4>
+                        <button type="submit"  class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="row">
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card" >
+                                <div class="card-body">
+                                    
+                                    <div class="form-group row">
+                                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Project Manager </label>
+                                        <div class="col-sm-9">
+                                          {% for k in pman %}
+                                          {% if k.id == t.projectmanager_id %}
+                                             
+                                              <input type="text" class="form-control text-light" name="pmname" required  value="{{k.id}}" hidden/>
+                                             <input type="text" class="form-control text-light" required  value="{{k.fullname}}"/>
+                                          {% endif %}
+                                          {% endfor %}
+                                            
+                                        </div>
+                                    </div>
+                                        
+                                        <div class="form-group row">
+                                          <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Team Leader </label>
+                                          <div class="col-sm-9">
+                                            <td>
+                                              {% for j in tl %}
+                                              {% if j.id == t.tl_id %}
+                                                 
+                                                  <input type="text" class="form-control text-light" name="tlname"required  value="{{j.id}}" hidden/>
+                                                  <input type="text" class="form-control text-light" required  value=" {{j.fullname}}"/>
+                                              {% endif %}
+                                              {% endfor %}
+                                            </td>
+                                              
+                                          </div>
+                                        </div>
+                                         <div class="form-group row">
+                                          <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Developer </label>
+                                          <div class="col-sm-9">
+                                           
+                                            <input type="text" class="form-control text-light" name="devname"required  value="{{t.id}}" hidden/>
+                                            <input type="text" class="form-control text-light" required  value=" {{t.fullname}}"/>
+                                              
+
+                                          </div>
+                                         </div><br>
+                                        <div class="row">
+                                            <center>
+                                            <div class="col-sm-5"></div>
+                                            <div class="col-sm-7" class="pull-right">
+                                                <button type="submit" class="btn btn-outline-primary btn-icon-text"><i class="mdi mdi-refresh btn-icon-prepend"></i>Update</button>
+                                            </div>
+                                          </center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+  {% endfor %}
+
+
+
+
+
+<script>
+  function myFunction() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+
+  
+  $(function() {
+  $("#totalid, #amid").on("keyup", balance);
+ 	function balance() {
+ 	$("#balance").val(Number($("#totalid").val()) - Number($("#amid").val()));
+ 	//$("#subt").val(Number($("#num1").val()) - Number($("#num2").val()));
+	}
+ });
+
+
+</script>
+
+
+
+
+
+{% endblock%}
