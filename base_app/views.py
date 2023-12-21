@@ -21326,3 +21326,30 @@ def applyNewOtherLeave(request):
     else:
         messages.error(request, 'Something went wrong.')
         return redirect(applyOtherLeave)
+
+
+def BRadmin_otherleavehistory(request):
+    if 'Adm_id' in request.session:
+        if request.session.has_key('Adm_id'):
+            Adm_id = request.session['Adm_id']
+
+        Adm = user_registration.objects.filter(id=Adm_id)
+        # des = designation.objects.get(designation="trainee")
+        le = OtherLeave.objects.all()
+        return render(request, 'BRadmin_otherleavehistory.html', {'Adm': Adm, 'le': le})
+    else:
+        return redirect('/')
+
+
+def accounts_otherleavehistory(request):
+    if 'usernameacnt2' in request.session:
+        if request.session.has_key('usernameacnt2'):
+            usernameacnt2 = request.session['usernameacnt2']
+        z = user_registration.objects.filter(id=usernameacnt2)
+        # d = department.objects.all()
+        le = OtherLeave.objects.all()
+        return render(request, 'accounts_otherleavehistory.html', {'z': z, 'le': le})
+    else:
+        return redirect('/')
+
+#-------------end ---------------

@@ -27,7 +27,7 @@
   <script src="{% static 'assets/vendors/chart.js/Chart.min.js'%}"></script>
   <script src="{% static 'assets/vendors/chart.js/Chart.min.js'%}"></script>
 </head>
-<body>
+<body style="background-color: #2a3038;">
   <style>
     .text-left, #hf {
       font-family: rubik, sans-serif;
@@ -77,7 +77,7 @@
   <div class="container py-5">
     <div id="firstbox" class="row shadow " style="background-color: #191c24;">
       <div class="col-md-12 ">
-        <h3 style="font-size: 25px;font-weight: 600;opacity: 0.9;color: #6c7293;">Apply Leave</h3>
+        <h3 style="font-size: 25px;font-weight: 600;opacity: 0.9;color: #6c7293;padding-top: 1.5rem;padding-left: 2rem;">Apply Leave</h3>
         <form method="POST" action="{% url 'applyNewOtherLeave' %}" enctype="multipart/form-data" id="myForm" onsubmit="return validateForm()">
           {% csrf_token %}
           <div class="container mt-5 mb-5">
@@ -88,11 +88,13 @@
               </div>
               <div class="col-md-4">
                 <div class="text-left mt-3 ">Email</div>
-                <input type="email" name="email" class="form-control mt-2" style="border-radius:5px;" id="email" placeholder="Email ID.." autocomplete="off" required>
+                <input type="email" name="email" class="form-control mt-2" onkeyup="validateEmail()" style="border-radius:5px;" id="email" placeholder="Email ID.." autocomplete="off" required>
+                <div class="text-danger" style="font-size: 14px;" id="emailErr"></div>
               </div>
               <div class="col-md-4">
                 <div class="text-left mt-3 ">Mobile</div>
-                <input type="tel" name="mobile" class="form-control mt-2" style="border-radius:5px;" id="mobile" placeholder="10 digit mobile number.." autocomplete="off" required>
+                <input type="tel" name="mobile" class="form-control mt-2" onkeyup="validateMobile()" style="border-radius:5px;" id="mobile" placeholder="10 digit mobile number.." autocomplete="off" required>
+                <div class="text-danger" style="font-size: 14px;" id="mobErr"></div>
               </div>
             </div>
             <div class="row">
@@ -329,6 +331,34 @@
 
     return true;
   }
+
+
+  function validateEmail(){
+    var email = $('#email').val().trim();
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(email != ""){
+      if(! emailRegex.test(email)){
+        $("#emailErr").text('Enter a valid Email Address')
+      }else{
+        $("#emailErr").text('')
+      }
+    }
+  }
+
+  function validateMobile(){
+    var mobile = $('#mobile').val().trim();
+    var phoneRegex = /^\d{10}$/;
+    if(mobile != ""){
+      if(! phoneRegex.test(mobile)){
+        $("#mobErr").text('Enter a valid 10 digit mobile number')
+      }else{
+        $("#mobErr").text('')
+      }
+    }
+  }
+
+  
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer" ></script>
 {%if messages%} {%for message in messages%} {%if message.tags == "success"%}

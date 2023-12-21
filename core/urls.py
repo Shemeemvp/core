@@ -1770,8 +1770,10 @@ urlpatterns = [
     #Athul end
 
     #Shemeem ---Apply other Leave
-    path('apply_other_leave',views.applyOtherLeave, name='applyOtherLeave'),
-    path('apply_new_other_leave',views.applyNewOtherLeave, name='applyNewOtherLeave'),
+    path('Leaveapplication',views.applyOtherLeave, name='applyOtherLeave'),
+    path('apply_new_leave',views.applyNewOtherLeave, name='applyNewOtherLeave'),
+    path('BRadminshow_other_leaves',views.BRadmin_otherleavehistory, name='BRadmin_otherleavehistory'),
+    path('accounts_show_other_leaves',views.accounts_otherleavehistory, name='accounts_otherleavehistory'),
     #End
 
 
