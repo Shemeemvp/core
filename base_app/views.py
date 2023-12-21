@@ -37,7 +37,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.db.models import Sum
 
-# from cal.models import *
+from cal.models import *
 
 
 # Create your views here.
@@ -207,6 +207,13 @@ def login(request):
                 request.session['aud_id'] = auduser.id
                 
                 return redirect('Auditdashboard')
+
+
+        design8 = designation.objects.get(designation="admin officer")    
+        if user_registration.objects.filter(email=request.POST['email'], password=request.POST['password'],designation=design8.id,status="active").exists():
+                admnofuser=user_registration.objects.get(email=request.POST['email'], password=request.POST['password'])
+                request.session['AdmOfc_id'] = admnofuser.id
+                return redirect('AdmnOfc_dashboard')
             
         else:
                 context = {'msg_error': 'Invalid data'}
@@ -21353,3 +21360,129 @@ def accounts_otherleavehistory(request):
         return redirect('/')
 
 #-------------end ---------------
+
+#________SHEMEEM_______AdminOfficer____________
+
+#logout
+def AdmnOfc_logout(request):
+    if 'AdmOfc_id' in request.session:  
+        request.session.flush()
+        return redirect('/')
+    else:
+        return redirect('/') 
+
+def AdmnOfc_dashboard(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        AdmOfc = user_registration.objects.filter(id=AdmOfc_id)
+        Num = user_registration.objects.filter(status="active").count()
+        Num1 = project.objects.count()
+        Trainer = designation.objects.get(designation='Trainer')
+        trcount = user_registration.objects.filter(designation=Trainer).count()
+        Man1 = designation.objects.get(designation='Manager')
+        Man2 = user_registration.objects.filter(designation=Man1)
+        des = designation.objects.get(designation="trainee")
+        le = leave.objects.filter(leaveapprovedstatus=0).exclude(designation_id=des.id)
+        labels = []
+        data = []
+        queryset = user_registration.objects.filter(id=AdmOfc_id)
+
+        tlde=designation.objects.get(designation='team leader')
+        d=designation.objects.get(designation='developer')
+        l=leave.objects.filter(to_date__gte=date.today())
+       
+        count=user_registration.objects.filter(~Q(id__in=l.values_list('user_id', flat=True)),Q(designation_id=tlde.id) | Q(designation_id=d.id),status="active",work_status='0').count()
+       
+        for i in queryset:
+            labels = [i.workperformance, i.attitude, i.creativity]
+            data = [i.workperformance, i.attitude, i.creativity]
+
+        return render(request, 'AdmOfc_dashboard.html', {'labels': labels, 'data': data, 'Num1': Num1, 'Man1': Man2, 'Adm': AdmOfc, 'num': Num, 'trcount': trcount, 'le': le,'count':count})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_dept(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        project_details = project.objects.all()
+        depart =department.objects.all()
+        return render(request,'AdmOfc_dept.html',{'proj_det':project_details,'department':depart,'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_projects(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        Num= project.objects.filter(~Q(status='Completed'),~Q(status='Rejected')).filter(department=id).count()
+        num= project.objects.filter(status='Completed').filter(department=id).count()
+        project_details = project.objects.all()
+        depart =department.objects.get(id=id)
+        return render(request,'AdmOfc_projects.html',{'proj_det':project_details,'num':Num,'Num':num,'department':depart,'id':id,'Adm':Adm})
+    else:
+        return redirect('/')
+    
+
+def AdmnOfc_registrationView(request):
+    if request.session.has_key('AdmOfc_id'):
+        AdmOfc_id = request.session['AdmOfc_id']
+    else:
+        return redirect('/')    
+    Adm = user_registration.objects.filter(id=AdmOfc_id)
+    return render(request,'AdmnOfc_registrationview.html',{'Adm':Adm})
+
+
+def AdmnOfc_registration(request):
+    if request.session.has_key('AdmOfc_id'):
+        AdmOfc_id = request.session['AdmOfc_id']
+    else:
+        return redirect('/')   
+        
+    if 'stop_status' in request.POST:
+        uid = request.POST.get("His_id")
+        user = user_registration.objects.get(id=uid)
+        if user.status=="active":
+            user.status="stop"
+            user.save()
+            return redirect("AdmnOfc_registration")
+        else:
+            user.status="active"
+            user.save()
+            return redirect("AdmnOfc_registration")
+    else:    
+        if  request.method=="POST":
+            u_id = request.POST.get("id")
+            dept_id = request.POST.get("dept")
+            desi_id = request.POST.get("des")
+            emp_ty = request.POST.get("emp_type")
+            res = request.POST.get("stat")
+
+            user = user_registration.objects.get(id=u_id)
+            user.department_id = dept_id 
+            user.status = res
+            user.employee_type=emp_ty
+            user.designation_id = desi_id
+            if desi_id == '6' or desi_id == '4':
+                user.work_status='0'
+            user.save()
+            return redirect("AdmnOfc_registration")
+        
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        mem1 = user_registration.objects.filter(~Q(status="resigned")).order_by("-id")
+        mem2 = designation.objects.filter(~Q(designation="admin"))
+        mem3 = department.objects.all()
+        return render(request,'AdmnOfc_registration.html',{'mem3':mem3,'mem2':mem2,'Adm':Adm,'mem1':mem1})
+
+#_________end________________________________

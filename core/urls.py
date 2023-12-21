@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.static import serve
 from base_app import views
-# from cal import views as calviews
+from cal import views as calviews
 
 
 
@@ -1461,9 +1461,9 @@ urlpatterns = [
     re_path(r'^current_modules/(?P<id>\d+)/$', views.current_modules, name='current_modules'),    
     
     
-#     re_path(r'^calendar$', calviews.CalendarView.as_view(), name='calendar'),
-#     re_path(r'^event/new/$', calviews.event, name='event_new'),
-#     re_path(r'^event/edit/(?P<event_id>\d+)/$', calviews.event, name='event_edit'),
+    re_path(r'^calendar$', calviews.CalendarView.as_view(), name='calendar'),
+    re_path(r'^event/new/$', calviews.event, name='event_new'),
+    re_path(r'^event/edit/(?P<event_id>\d+)/$', calviews.event, name='event_edit'),
     
     
     re_path(r'^accounts_salary_leave/$', views.accounts_salary_leave, name='accounts_salary_leave'),
@@ -1775,6 +1775,15 @@ urlpatterns = [
     path('BRadminshow_other_leaves',views.BRadmin_otherleavehistory, name='BRadmin_otherleavehistory'),
     path('accounts_show_other_leaves',views.accounts_otherleavehistory, name='accounts_otherleavehistory'),
     #End
+
+    #________SHEMEEM_______Admin Officer____________
+    path('AdmnOfc_dashboard',views.AdmnOfc_dashboard, name='AdmnOfc_dashboard'),
+    path('AdmnOfc_logout',views.AdmnOfc_logout,name='AdmnOfc_logout'),
+    path('AdmnOfc_registration_view',views.AdmnOfc_registrationView, name='AdmnOfc_registrationView'),
+    path('AdmnOfc_registration',views.AdmnOfc_registration, name='AdmnOfc_registration'),
+    path('AdmnOfc_dept',views.AdmnOfc_dept, name='AdmnOfc_dept'),
+    path('AdmnOfc_projects/<int:id>',views.AdmnOfc_projects, name='AdmnOfc_projects'),
+    #_________________end______________________
 
 
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
