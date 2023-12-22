@@ -105,6 +105,15 @@
                     </a>
                 </li>
                 <li class="nav-item menu-items">
+                    <a class="nav-link" href="{% url 'BRadmin_ExpCertificateRequests' %}">
+                        <span class="menu-icon position-relative">
+                            <i class="mdi mdi-certificate"></i>
+                            {%if exp_requests %}<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="padding: 0.2rem 0.4rem;font-size: 0.5rem;margin-left: 0rem;">{{exp_requests|length}}</span>{% endif %}
+                        </span>
+                        <span class="menu-title">Approve Certificates</span>
+                    </a>
+                </li>
+                <li class="nav-item menu-items">
                     <a class="nav-link" href="{% url 'BRadmin_audit' %}">
                         <span class="menu-icon">
                             <i class="mdi mdi-chart-line"></i>

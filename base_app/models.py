@@ -159,6 +159,7 @@ class user_registration(models.Model):
     work_status =  models.CharField(max_length=10, default='')
     performance =  models.CharField(max_length=50, default='')
     trainee_status = models.IntegerField(default='0')
+    exp_certificate_status = models.CharField(max_length=15, null=True, default='null')
    
  
     def __str__(self):

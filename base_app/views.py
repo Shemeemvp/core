@@ -21400,7 +21400,7 @@ def AdmnOfc_dashboard(request):
             labels = [i.workperformance, i.attitude, i.creativity]
             data = [i.workperformance, i.attitude, i.creativity]
 
-        return render(request, 'AdmOfc_dashboard.html', {'labels': labels, 'data': data, 'Num1': Num1, 'Man1': Man2, 'Adm': AdmOfc, 'num': Num, 'trcount': trcount, 'le': le,'count':count})
+        return render(request, 'AdmnOfc_dashboard.html', {'labels': labels, 'data': data, 'Num1': Num1, 'Man1': Man2, 'Adm': AdmOfc, 'num': Num, 'trcount': trcount, 'le': le,'count':count})
     else:
         return redirect('/')
 
@@ -21414,7 +21414,7 @@ def AdmnOfc_dept(request):
         Adm = user_registration.objects.filter(id=AdmOfc_id)
         project_details = project.objects.all()
         depart =department.objects.all()
-        return render(request,'AdmOfc_dept.html',{'proj_det':project_details,'department':depart,'Adm':Adm})
+        return render(request,'AdmnOfc_dept.html',{'proj_det':project_details,'department':depart,'Adm':Adm})
     else:
         return redirect('/')
 
@@ -21430,7 +21430,7 @@ def AdmnOfc_projects(request,id):
         num= project.objects.filter(status='Completed').filter(department=id).count()
         project_details = project.objects.all()
         depart =department.objects.get(id=id)
-        return render(request,'AdmOfc_projects.html',{'proj_det':project_details,'num':Num,'Num':num,'department':depart,'id':id,'Adm':Adm})
+        return render(request,'AdmnOfc_projects.html',{'proj_det':project_details,'num':Num,'Num':num,'department':depart,'id':id,'Adm':Adm})
     else:
         return redirect('/')
     
@@ -21484,5 +21484,631 @@ def AdmnOfc_registration(request):
         mem2 = designation.objects.filter(~Q(designation="admin"))
         mem3 = department.objects.all()
         return render(request,'AdmnOfc_registration.html',{'mem3':mem3,'mem2':mem2,'Adm':Adm,'mem1':mem1})
+
+
+def AdmnOfc_registrationUpdate(request, id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+
+        mem4 = user_registration.objects.get(id=id)
+        con = conditions.objects.get(id=1)
+        try:
+            xem = extracurricular.objects.get(user_id=id)
+        except extracurricular.DoesNotExist:
+            xem = None
+        try:
+            qem = qualification.objects.get(user_id=id)
+        except qualification.DoesNotExist:
+            qem = None
+        des = designation.objects.filter(~Q(designation='admin'))
+        desig = designation.objects.all().exclude(designation = 'team leader').exclude(designation ='manager').exclude(designation ='trainee').exclude(designation ='project manager').exclude(designation ='tester').exclude(designation ='trainingmanager').exclude(designation ='account').exclude(designation ='trainer').exclude(designation ='developer')
+
+        admins = user_registration.objects.get(id=AdmOfc_id)
+
+        br_name = branch_registration.objects.get(id=admins.branch.id)
+
+        return render(request, 'AdmnOfc_registration_update.html', {'con': con, 'mem4': mem4, 'qem': qem, 'xem': xem, 'Adm': Adm, 'des': des, 'br_name': br_name, 'desig':desig})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_registrationUpdateSave(request, id):
+    a = user_registration.objects.get(id=id)
+    b = qualification.objects.get(user_id=id)
+    try:
+        c = extracurricular.objects.get(user_id=id)
+    except extracurricular.DoesNotExist:
+        c = None
+
+    d = conditions.objects.get(id=1)
+    if request.method == 'POST':
+        a.performance = request.POST['perfo']
+        a.fullname = request.POST['name']
+        a.fathername = request.POST['fathersname']
+        a.mothername = request.POST['mothersname']
+        a.presentaddress1 = request.POST['presentaddress1']
+        a.presentaddress2 = request.POST['presentaddress2']
+        a.presentaddress3 = request.POST['presentaddress3']
+        a.pincode = request.POST['pincode']
+        a.district = request.POST['district']
+        a.state = request.POST['state']
+        a.permanentaddress1 = request.POST['permanentaddress1']
+        a.permanentaddress2 = request.POST['permanentaddress2']
+        a.permanentaddress3 = request.POST['permanentaddress3']
+        a.permanentpincode = request.POST['permanentpincode']
+        a.permanentdistrict = request.POST['permanentdistrict']
+        a.permanentstate = request.POST['permanentstate']
+        a.designation_id = request.POST['designation']
+        a.desig_input = request.POST['desg']
+        a.department_input = request.POST['department_current']
+        a.mobile = request.POST['mobile']
+        a.alternativeno = request.POST['altmobile1']
+        a.email = request.POST['email']
+        a.hrmanager = request.POST['hrname']
+        a.joiningdate = request.POST['dateofjoin']
+        a.startdate = request.POST['startdate']
+        a.enddate = request.POST['enddate']
+        a.workperformance = request.POST['performance']
+        a.hr_designation = request.POST['hrdesignation']
+        if request.FILES.get('signature') is not None:
+            a.signature = request.FILES['signature']
+        a.save()
+
+        b.user_id = a.id
+        b.school = request.POST['school']
+        b.schoolaggregate = request.POST['aggregate']
+        b.ugdegree = request.POST['degree']
+        b.ugstream = request.POST['stream']
+        b.ugpassoutyr = request.POST['passoutyear']
+        b.ugaggregrate = request.POST['aggregate1']
+        b.pg = request.POST['pg']
+        b.save()
+        
+        if c :
+            c.user_id = a.id
+            c.internshipdetails = request.POST['details']
+            c.internshipduration = request.POST['duration1']
+            c.internshipcertificate = request.POST['certification']
+            c.onlinetrainingdetails = request.POST['details1']
+            c.onlinetrainingduration = request.POST['duration2']
+            c.onlinetrainingcertificate = request.POST['certification1']
+            c.projecttitle = request.POST['title']
+            c.projectduration = request.POST['duration3']
+            c.projectdescription = request.POST['description']
+            c.projecturl = request.POST['url']
+            c.skill1 = request.POST['skill1']
+            c.skill2 = request.POST['skill2']
+            c.skill3 = request.POST['skill3']
+            c.save()
+            
+        d.condition1 = request.POST.get("condition1")
+        d.condition2 = request.POST.get("condition2")
+        d.condition3 = request.POST.get("condition3")
+        d.condition4 = request.POST.get("condition4")
+        d.condition5 = request.POST.get("condition5")
+        d.condition6 = request.POST.get("condition6")
+        d.save()
+        return redirect('AdmnOfc_registration')
+
+
+def AdmnOfc_registrationDelete(request,id):
+    man = user_registration.objects.get(id=id)
+  
+    man1 = extracurricular.objects.get(user_id=man.id)
+    man2 = qualification.objects.get(user_id=man.id)
+    man2.delete()
+    man1.delete()
+    man.delete()
+    os.remove(man.idproof.path)
+    os.remove(man.photo.path)
+    return redirect('AdmnOfc_registration')
+
+
+def AdmnOfc_resign(request):
+    if request.session.has_key('AdmOfc_id'):
+        AdmOfc_id = request.session['AdmOfc_id']
+    else:
+        return redirect('/')    
+    if request.method=="POST":
+        u_id = request.POST.get("id")
+        dept_id = request.POST.get("dept")
+        desi_id = request.POST.get("des")
+        user = user_registration.objects.get(id=u_id)
+        user.department_id = dept_id 
+        
+        user.designation_id = desi_id
+        user.save()
+        return redirect("AdmnOfc_registration")
+    Adm = user_registration.objects.filter(id=AdmOfc_id)
+    mem1 = user_registration.objects.filter(status="resigned").order_by("-id")
+    mem2 = designation.objects.all()
+    mem3 = department.objects.all()
+    return render(request,'AdmnOfc_resign.html',{'mem3':mem3,'mem2':mem2,'Adm':Adm,'mem1':mem1})
+
+
+def AdmnOfc_newRegistration(request):
+    if request.session.has_key('AdmOfc_id'):
+        AdmOfc_id = request.session['AdmOfc_id']
+    else:
+        return redirect('/')
+    if request.method == "POST":
+        u_id = request.POST.get("id")
+        dept_id = request.POST.get("dept")
+        desi_id = request.POST.get("des")
+        res = request.POST.get("stat")
+
+        user = user_registration.objects.get(id=u_id)
+        user.department_id = dept_id
+        user.status = res
+        user.designation_id = desi_id
+        user.save()
+        return redirect("AdmnOfc_newRegistration")
+    Adm = user_registration.objects.filter(id=AdmOfc_id)
+    mem1 = user_registration.objects.filter(~Q(status="resigned"),reg_status=0).order_by("-id")
+    mem2 = designation.objects.filter(~Q(designation="admin"))
+    mem3 = department.objects.all()
+    return render(request, 'AdmnOfc_new_registration.html', {'mem3': mem3, 'mem2': mem2, 'Adm': Adm, 'mem1': mem1})
+
+
+def AdmnOfc_registrationStatus(request, id):
+    man = user_registration.objects.get(id=id)
+    man.reg_status = "1"    
+    man.save()
+    return redirect('AdmnOfc_newRegistration')
+
+
+def AdmnOfc_attendance(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+                AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        if request.method == "POST":
+            empname1=request.POST.get('empname')
+            atten=attendance.objects.filter(user_id=empname1).order_by('-id')
+            return render(request,'AdmnOfc_show_attendances.html',{'Adm':Adm,'atten':atten,'empname1':empname1}) 
+        dpt=department.objects.all()
+        dsg=designation.objects.all()
+        userreg=user_registration.objects.all()
+        return render(request,'AdmnOfc_attendance.html', {'Adm':Adm,'department':dpt,'designation':dsg,'user_registration':userreg})  
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_workStatus(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+
+        cous = course.objects.all()
+        dep = department.objects.all()
+        des = designation.objects.all()
+        emp = user_registration.objects.all()
+
+        return render(request,'AdmnOfc_workstatus.html',{'Adm': Adm, 'cous':cous,'dep':dep,'des':des,'emp':emp,})
+    else:
+        return redirect('/')
+
+
+@csrf_exempt
+def AdmnOfc_designations(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+
+        dept_id = request.GET.get('dept_id')
+        
+        br_id = department.objects.get(id=dept_id)
+        
+        
+        Desig = designation.objects.filter(~Q(designation="admin"),~Q(designation="manager"),~Q(designation="project manager"),~Q(designation="tester"),~Q(designation="trainingmanager"),~Q(designation="trainer"),~Q(designation="trainee"),~Q(designation="accountant"),~Q(designation="hr")).filter(branch_id=br_id.branch_id)
+        return render(request,'BRadmin_designations.html',{'Adm': Adm,'Desig': Desig, })
+    else:
+        return redirect('/')
+
+
+@csrf_exempt
+def AdmnOfc_employees(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+
+        dept_id = request.GET.get('dept_id')
+        desigId = request.GET.get('desigId')
+        br_id = department.objects.get(id=dept_id)
+        Desig = user_registration.objects.filter(branch_id=br_id.branch_id, designation=desigId, status="active")
+
+        return render(request,'BRadmin_emp_ajax.html',{'Adm': Adm,'Desig': Desig,})
+    else:
+        return redirect('/')
+
+
+@csrf_exempt
+def AdmnOfc_projectsDetails(request):
+    if 'AdmOfc_id' in request.session:
+        emp = request.POST['emp']
+        fdate = request.POST['fdate']
+        tdate = request.POST['tdate']
+        names = project_taskassign.objects.filter(developer=emp,startdate__gte=fdate, enddate__lte=tdate).order_by('-id')
+
+        tot_delay = 0
+        start = datetime.strptime(fdate, '%Y-%m-%d').date()
+        end = datetime.strptime(tdate, '%Y-%m-%d').date()
+        pro_sub = project_taskassign.objects.filter(startdate__range=(start,end),enddate__range=(start,end), submitted_date__isnull = False).filter(developer_id= emp, ).values('startdate','enddate','submitted_date', 'delay')
+        pro_sub_false = project_taskassign.objects.filter(startdate__range=(start,end),enddate__range=(start,end), submitted_date__isnull = True).filter(developer_id= emp).values('startdate','enddate')
+
+        pro_sub_selected = project_taskassign.objects.filter(~Q(startdate__range=(start,end))).filter(enddate__range=(start,end), submitted_date__isnull = False).filter(developer_id= emp).values('startdate','enddate', 'submitted_date')
+        pro_sub_selected_false = project_taskassign.objects.filter(~Q(startdate__range=(start,end))).filter(enddate__range=(start,end), submitted_date__isnull = True).filter(developer_id= emp).values('startdate','enddate')
+
+        pro_sub_not_this =  project_taskassign.objects.filter(~Q(startdate__range=(start,end)), ~Q(enddate__range=(start,end))).filter(submitted_date__isnull = True).filter(developer_id= emp).values('startdate','enddate')
+        pro_sub_sub_this =  project_taskassign.objects.filter(~Q(startdate__range=(start,end)), ~Q(enddate__range=(start,end))).filter(submitted_date__isnull = False).filter(developer_id= emp).values('startdate','enddate', 'submitted_date')
+       
+
+        for x in pro_sub:
+            end_date = x['enddate']
+            sub_date = x['submitted_date']
+            if sub_date <= end:
+                holy =  Event.objects.filter(start_time__gte=end_date,start_time__lte=sub_date).values('start_time').count()
+                diff = ((sub_date - end_date ).days) - holy
+
+                tot_delay = tot_delay + diff
+            else:
+                holy =  Event.objects.filter(start_time__gte=end_date,start_time__lte=end).values('start_time').count()
+                diff = ((end - end_date ).days) - holy
+
+                tot_delay = tot_delay + diff
+
+
+        for x in pro_sub_false:
+            end_date = x['enddate']
+            if end_date <= end:
+                holy =  Event.objects.filter(start_time__gte=end_date,start_time__lte=end).values('start_time').count()
+                diff = ((end - end_date ).days) - holy
+
+                tot_delay = tot_delay + diff
+        
+        for x in pro_sub_selected:
+            end_date = x['enddate']
+            sub_date = x['submitted_date']
+            holy =  Event.objects.filter(start_time__gte=end_date,start_time__lte=sub_date).values('start_time').count()
+            diff = ((sub_date - end_date ).days) - holy
+
+            tot_delay = tot_delay + diff
+
+        for x in pro_sub_selected_false:
+            end_date = x['enddate']
+            holy =  Event.objects.filter(start_time__gte=end_date,start_time__lte=end).values('start_time').count()
+            diff = ((end - end_date ).days) - holy
+
+            tot_delay = tot_delay + diff
+
+
+        for x in pro_sub_not_this:
+            end_date = x['enddate']
+            if end_date <= start:
+                holy =  Event.objects.filter(start_time__gte=start,start_time__lte=end).values('start_time').count()
+                diff = (((end - start ).days) - holy) + 1
+
+                tot_delay = tot_delay + diff
+
+        
+
+        for x in pro_sub_sub_this:
+            end_date = x['enddate']
+            sub_date = x['submitted_date']
+            if start <= sub_date and sub_date <=end:
+                holy =  Event.objects.filter(start_time__gte=start,start_time__lte=sub_date).values('start_time').count()
+                diff = (((sub_date - start ).days) - holy) + 1
+                tot_delay = tot_delay + diff
+
+        a = tot_delay
+
+
+        return render(request,'BRadmin_projects_details.html', {'names':names,'a':a })
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_traineeStatus(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        dep=department.objects.all()
+        des = designation.objects.get(designation="trainee")
+        var=user_registration.objects.filter(designation_id=des.id)
+        return render(request, 'AdmnOfc_trainee_status.html', {'Adm': Adm,'var':var,'dep':dep})
+    else:
+        return redirect('/')
+
+
+@csrf_exempt
+def AdmnOfc_trainees(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        dept_id = request.GET.get('dept_id')
+        des = designation.objects.get(designation="trainee")
+        des1 = designation.objects.get(designation="developer")
+        Desig = user_registration.objects.filter(department_id=dept_id,designation_id=des.id, status="active")
+        Desig1 = user_registration.objects.filter(department_id=dept_id,designation_id=des1.id, status="active")
+       
+        return render(request,'BRadmin_trainess.html',{'Adm': Adm,'Desig': Desig, 'Desig1':Desig1 })
+    else:
+        return redirect('/')
+
+
+@csrf_exempt
+def AdmnOfc_traineeDetails(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        emp = request.POST['emp']
+        names = trainer_task.objects.filter(user_id=emp).order_by('-id')                                          
+        mm = names.values_list('delay', flat='true')
+        a=0
+        for i in mm:
+            
+            a=a+int(i)
+        return render(request, 'BRadmin_trainee_details.html', {'Adm': Adm,'names':names,'a':a})
+    else:
+        return redirect('/')
+
+
+
+def AdmnOfc_leaveStatus(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+
+        cous = course.objects.all()
+        dep = department.objects.all()
+        des = designation.objects.all()
+        emp = user_registration.objects.all()
+
+        return render(request,'AdmnOfc_leavestatus.html',{'Adm': Adm, 'cous':cous,'dep':dep,'des':des,'emp':emp,})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_otherLeaveHistory(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        le = OtherLeave.objects.all()
+        return render(request, 'AdmnOfc_otherleavehistory.html', {'Adm': Adm, 'le': le})
+    else:
+        return redirect('/')
+
+
+@csrf_exempt
+def AdmnOfc_leavedesgn(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+
+        dept_id = request.GET.get('dept_id')
+        
+        br_id = department.objects.get(id=dept_id)
+        
+        Desig = designation.objects.filter(~Q(designation="admin")).filter(branch_id=br_id.branch_id)
+        return render(request,'BRadmin_leavedesgn.html',{'Adm': Adm,'Desig': Desig})
+    else:
+        return redirect('/')
+
+
+@csrf_exempt
+def AdmnOfc_leaveDetails(request):
+    
+    emp = request.GET.get('emp')
+    fdate = request.GET.get('fdate')
+    tdate = request.GET.get('tdate')
+    leaves = leave.objects.filter(user_id=emp,from_date__gte=fdate,to_date__lte=tdate)
+    return render(request,'BRadmin_leave_details.html',{'names':leaves})
+
+
+def AdmnOfc_requestExpCertificate(request,id):
+    if 'AdmOfc_id' in request.session:
+        usr = user_registration.objects.get(id = id)
+        usr.exp_certificate_status = 'pending'
+        usr.save()
+
+        messages.success(request, 'Request has been sent.')
+        return redirect('AdmnOfc_resign')
+    else:
+        return redirect('/')
+
+
+def BRadmin_ExpCertificateRequests(request):
+    if 'Adm_id' in request.session:
+        if request.session.has_key('Adm_id'):
+            Adm_id = request.session['Adm_id']
+        
+        Adm = user_registration.objects.filter(id=Adm_id)
+        admin = user_registration.objects.get(id=Adm_id)
+        req = user_registration.objects.filter(branch = admin.branch, exp_certificate_status = 'pending')
+
+        return render(request,'BRadmin_exp_certificate_request.html', {'Adm': Adm, 'exp_requests':req})
+    else:
+        return redirect('/')
+
+
+def BRadmin_approveExpRequest(request,id):
+    if 'Adm_id' in request.session:
+        usr = user_registration.objects.get(id = id)
+        usr.exp_certificate_status = 'approved'
+        usr.save()
+
+        messages.success(request, 'Request has been approved successfully.')
+        return redirect('BRadmin_ExpCertificateRequests')
+    else:
+        return redirect('/')
+
+
+def BRadmin_rejectExpRequest(request,id):
+    if 'Adm_id' in request.session:
+        usr = user_registration.objects.get(id = id)
+        usr.exp_certificate_status = 'rejected'
+        usr.save()
+
+        messages.info(request, 'Request has been rejected.')
+        return redirect('BRadmin_ExpCertificateRequests')
+    else:
+        return redirect('/')
+
+
+
+def AdmnOfc_projectsList(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        project_details = project.objects.filter(~Q(status='Completed'),department_id=id)
+        return render(request,'AdmnOfc_proj_list.html',{'proj_det':project_details,'Adm':Adm})
+
+
+def AdmnOfc_projectDetails(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        project_details = project.objects.get(id=id)
+        proj=DM_projects.objects.all()
+        return render(request,'AdmnOfc_proj_det.html',{'proj_det':project_details,'Adm':Adm,'proj':proj})
+
+
+def AdmnOfc_projectsCompleted(request, id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        project_details=project.objects.filter(department=id)
+        
+        return render(request,'AdmnOfc_proj_cmpltd_show.html',{'project': project_details,'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_allEmployees(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        Dept = department.objects.all()
+        return render(request,'AdmnOfc_employees.html',{'Adm':Adm,'Dept':Dept})
+
+
+def AdmnOfc_departmentEmployees(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Dept = department.objects.get(id = id)
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        Desig = designation.objects.all()
+        return render(request,'AdmnOfc_department_designations.html',{'Adm':Adm,'Desig':Desig,'Dept':Dept,'dept_id':id})
+
+
+def AdmnOfc_designationEmployees(request,id,did):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        Project_man= designation.objects.get(id = id)
+        project_name = project.objects.filter(designation=Project_man).filter(department=did)
+        Project_man_data=user_registration.objects.filter(designation=Project_man).filter(department=did,status="active").order_by("-id")
+        return render(request,'AdmnOfc_desig_emp.html',{'pro_man_data':Project_man_data,'Adm':Adm,'project_name':project_name,'Project_man':Project_man})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_leaveHistory(request):
+    if 'AdmOfc_id' in request.session:
+
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        des = designation.objects.get(designation="trainee")
+        le = leave.objects.filter(leaveapprovedstatus=0).exclude(designation_id=des.id).order_by('-id')
+        return render(request, 'AdmnOfc_leavehistory.html', {'Adm': Adm, 'le': le})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_leaveApprovedStatus(request, id):
+    if 'AdmOfc_id' in request.session:
+
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+
+        le = leave.objects.get(id=id)
+        le.leaveapprovedstatus = 1
+        le.save()
+        msg_success = "Leave approved Successfully"
+        return render(request, 'AdmnOfc_leavehistory.html', {'Adm': Adm, 'msg_success': msg_success})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_rejectedStatus(request, id):
+    if 'AdmOfc_id' in request.session:
+
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+
+        le = leave.objects.get(id=id)
+        le.leaveapprovedstatus = 2
+        le.leave_rejected_reason = request.POST['review']
+        le.save()
+        msg_warning = "Leave Rejected Successfully"
+        return render(request, 'AdmnOfc_leavehistory.html', {'Adm': Adm, 'msg_warning': msg_warning})
+    else:
+        return redirect('/')
 
 #_________end________________________________
