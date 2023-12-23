@@ -1814,6 +1814,23 @@ urlpatterns = [
     path('AdmnOfc_leave_history',views.AdmnOfc_leaveHistory, name='AdmnOfc_leaveHistory'),
     path('AdmnOfc_leave_approved_status/<int:id>',views.AdmnOfc_leaveApprovedStatus, name='AdmnOfc_leaveApprovedStatus'),
     path('AdmnOfc_rejected_status/<int:id>',views.AdmnOfc_rejectedStatus, name='AdmnOfc_rejectedStatus'),
+    path('AdmnOfc_change_password',views.AdmnOfc_changePassword, name='AdmnOfc_changePassword'),
+    path('AdmnOf_trainers_department',views.AdmnOf_trainersDepartment, name='AdmnOf_trainersDepartment'),
+    path('AdmnOfc_trainers_dep/<int:did>',views.AdmnOfc_trainersDep, name='AdmnOfc_trainersDep'),
+    path('AdmnOfc_trainer/<int:id>',views.AdmnOfc_trainer, name='AdmnOfc_trainer'),
+    path('AdmnOfc_emp_profile/<int:id>',views.AdmnOfcEmpProfile, name='AdmnOfcEmpProfile'),
+    path('AdmnOfc_emp_attendance/<int:id>',views.AdmnOfc_empAttendance, name='AdmnOfc_empAttendance'),
+    path('AdmnOfc_empAttendanceSort/<int:id>',views.AdmnOfc_empAttendanceSort, name='AdmnOfc_empAttendanceSort'),
+    path('AdmnOfc_acc_settings',views.AdmnOfc_accSettings, name='AdmnOfc_accSettings'),
+    path('AdmnOfc_acc_settings_image_change/<int:id>',views.AdmnOfc_accSettingsImageChange, name='AdmnOfc_accSettingsImageChange'),
+    path('AdmnOfc_dmproject/<int:id>',views.AdmnOfc_dmproject, name='AdmnOfc_dmproject'),
+    path('AdmnOfc_trainingteam1/<int:id>',views.AdmnOfc_trainingteam1, name='AdmnOfc_trainingteam1'),
+    path('AdmnOfc_trainees_table/<int:id>',views.AdmnOfc_traineestable, name='AdmnOfc_traineestable'),
+    path('AdmnOfc_topictable/<int:id>',views.AdmnOfc_topictable, name='AdmnOfc_topictable'),
+    path('AdmnOfc_training_profile/<int:id>',views.AdmnOfc_trainingprofile, name='AdmnOfc_trainingprofile'),
+    path('AdmnOfc_completed_task_table/<int:id>',views.AdmnOfc_completedtasktable, name='AdmnOfc_completedtasktable'),
+    path('AdmnOfc_dm_report_full_data/<int:task_id>/<int:proj_id>',views.AdmnOfc_dm_report_full_data, name='AdmnOfc_dm_report_full_data'),
+    path('AdmnOfc_dm_datereport_data/<int:retask_id>/<int:repj_id>',views.AdmnOfc_dm_datereport_data, name='AdmnOfc_dm_datereport_data'),
 
     #_________________end______________________
 

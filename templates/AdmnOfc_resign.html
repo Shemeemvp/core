@@ -108,17 +108,17 @@
                                   </td>
                                  
                                 <td>
-                                    {% if i.exp_certificate_status == 'null' %}
+                                    {% if not i.exp_certificate_status or i.exp_certificate_status == 'null' %}
                                     <a href="{% url 'AdmnOfc_requestExpCertificate' i.id %}">
                                         <div class="badge badge-outline-success">Request</div>
                                     </a>
                                     {% elif i.exp_certificate_status == 'pending' %}
                                     <a href="#">
-                                        <div class="badge badge-outline-success">Pending</div>
+                                        <div class="badge badge-outline-info">Request Pending</div>
                                     </a>
                                     {% elif i.exp_certificate_status == 'rejected' %}
                                     <a href="#">
-                                        <div class="badge badge-outline-danger">Rejected</div>
+                                        <div class="badge badge-outline-danger">Request Rejected</div>
                                     </a>
                                     {% elif i.exp_certificate_status == 'approved' %}
                                     <a href="{% url 'pdfex' i.id %}">

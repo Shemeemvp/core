@@ -67,7 +67,7 @@
                                 class="mdi mdi-dots-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list"
                             aria-labelledby="profile-dropdown">
-                            <a href="{% url 'BRadmin_accsetting' %}" class="dropdown-item preview-item">
+                            <a href="{% url 'AdmnOfc_accSettings' %}" class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                     <div class="preview-icon bg-dark rounded-circle">
                                         <i class="mdi mdi-settings text-primary"></i>
@@ -78,7 +78,7 @@
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="{% url 'BRadmin_changepwd' %}" class="dropdown-item preview-item">
+                            <a href="{% url 'AdmnOfc_changePassword' %}" class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                     <div class="preview-icon bg-dark rounded-circle">
                                         <i class="mdi mdi-onepassword  text-info"></i>
@@ -104,55 +104,6 @@
                         <span class="menu-title">Dashboard</span>
                     </a>
                 </li>
-                <!-- <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_audit' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-chart-line"></i>
-                        </span>
-                        <span class="menu-title">Audit</span>
-                    </a>
-                </li>
-               <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_income' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-currency-inr"></i>
-                        </span>
-                        <span class="menu-title">Company Income</span>
-                    </a>
-                </li>
-                <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_mainexpenses' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-currency-inr"></i>
-                        </span>
-                        <span class="menu-title">Company Expense</span>
-                    </a>
-                </li>
-                <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_upcoming' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-cube-outline"></i>
-                        </span>
-                        <span class="menu-title">Upcoming Projects</span>
-                    </a>
-                </li>
-                <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_tasks' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-clipboard-text"></i>
-                        </span>
-                        <span class="menu-title">Task</span>
-                    </a>
-                </li> -->
-
-                <li class="nav-item menu-items">
-                    <a class="nav-link" href="#">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-certificate"></i>
-                        </span>
-                        <span class="menu-title">Internship</span>
-                    </a>
-                </li>
                 <li class="nav-item menu-items">
                     <a class="nav-link" href="{% url 'AdmnOfc_registrationView' %}">
                         <span class="menu-icon">
@@ -161,23 +112,6 @@
                         <span class="menu-title">Registration</span>
                     </a>
                 </li>
-
-                <!-- <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'newdept' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-folder-plus"></i>
-                        </span>
-                        <span class="menu-title">New Department</span>
-                    </a>
-                </li>
-                <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_Reportedissue_department' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-file-document-box"></i>
-                        </span>
-                        <span class="menu-title">Reported Issues</span>
-                    </a>
-                </li> -->
                 <li class="nav-item menu-items">
                     <a class="nav-link" href="{% url 'AdmnOfc_attendance' %}">
                         <span class="menu-icon">
@@ -186,30 +120,6 @@
                         <span class="menu-title">Attendance</span>
                     </a>
                 </li>
-                <!-- <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_accounts' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-account-box-outline"></i>
-                        </span>
-                        <span class="menu-title">Accounts</span>
-                    </a>
-                </li>
-                <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_project_dept' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-book-multiple"></i>
-                        </span>
-                        <span class="menu-title">Project</span>
-                    </a>
-                </li>
-                <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_project_tester' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-account-check"></i>
-                        </span>
-                        <span class="menu-title">Project Tester</span>
-                    </a>
-                </li> -->
                 <li class="nav-item menu-items">
                     <a class="nav-link" href="{% url 'AdmnOfc_workStatus' %}">
                         <span class="menu-icon">
@@ -218,14 +128,6 @@
                         <span class="menu-title">Work Status</span>
                     </a>
                 </li>
-                <!-- <li class="nav-item menu-items">
-                    <a class="nav-link" href="{% url 'BRadmin_action_taken' %}">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-undo-variant"></i>
-                        </span>
-                        <span class="menu-title">Action Taken</span>
-                    </a>
-                </li> -->
                 <li class="nav-item menu-items">
                     <a class="nav-link" href="{% url 'AdmnOfc_traineeStatus' %}">
                         <span class="menu-icon">
@@ -343,6 +245,40 @@
             <!-- inject:js -->
             <script src="{% static 'assets/js/chart.js'%}"></script>
             <script src="{% static '/assets/js/file-upload.js' %}"></script>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            {%if messages%} {%for message in messages%} {%if message.tags == "success"%}
+            <script>
+            swal({
+                position: "top-end",
+                icon: "success",
+                title: "{{message}}",
+            });
+            </script>
+            {%elif message.tags == "warning"%}
+            <script>
+            swal({
+                position: "top-end",
+                icon: "warning",
+                title: "{{message}}",
+            });
+            </script>
+            {%elif message.tags == "error"%}
+            <script>
+            swal({
+                position: "top-end",
+                icon: "error",
+                title: "{{message}}",
+            });
+            </script>
+            {%else%}
+            <script>
+            swal({
+                position: "top-end",
+                icon: "info",
+                title: "{{message}}",
+            });
+            </script>
+            {%endif%} {%endfor%} {%endif%}
 </body>
 
 </html>

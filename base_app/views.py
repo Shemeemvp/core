@@ -43,8 +43,6 @@ from cal.models import *
 # Create your views here.
 def login(request):
     
-    
-    
     if request.method == 'POST':
         
         
@@ -208,7 +206,7 @@ def login(request):
                 
                 return redirect('Auditdashboard')
 
-
+        #added - shemeem - New designation module development
         design8 = designation.objects.get(designation="admin officer")    
         if user_registration.objects.filter(email=request.POST['email'], password=request.POST['password'],designation=design8.id,status="active").exists():
                 admnofuser=user_registration.objects.get(email=request.POST['email'], password=request.POST['password'])
@@ -22110,5 +22108,411 @@ def AdmnOfc_rejectedStatus(request, id):
         return render(request, 'AdmnOfc_leavehistory.html', {'Adm': Adm, 'msg_warning': msg_warning})
     else:
         return redirect('/')
+
+
+def AdmnOfc_changePassword(request):
+    
+    if 'AdmOfc_id' in request.session:
+        
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']     
+        Adm = user_registration.objects.filter(id=AdmOfc_id)     
+        if request.method == 'POST':
+            abc = user_registration.objects.get(id=AdmOfc_id)
+            cur = abc.password
+            oldps = request.POST["currentPassword"]
+            newps = request.POST["newPassword"]
+            cmps = request.POST["confirmPassword"]
+            if oldps == cur:
+                if oldps != newps:
+                    if newps == cmps:
+                        abc.password = request.POST.get('confirmPassword')
+                        abc.save()
+                        messages.success(request, 'Password Reset Successfully.')
+                        return render(request, 'AdmnOfc_dashboard.html', {'Adm': Adm})
+                elif oldps == newps:
+                    messages.add_message(request, messages.INFO, 'Current and New password same')
+                else:
+                    messages.info(request, 'Incorrect password same')
+
+                return render(request, 'AdmnOfc_dashboard.html', {'Adm': Adm})
+            else:
+                messages.add_message(request, messages.INFO, 'old password wrong')
+                return render(request, 'AdmnOfc_changepswd.html', {'Adm': Adm})
+        return render(request, 'AdmnOfc_changepswd.html', {'Adm': Adm})         
+    else:
+        return redirect('/')
+
+
+def AdmnOf_trainersDepartment(request):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        Dept = department.objects.all()
+        Desig = designation.objects.all()
+        return render(request,'AdmnOfc_trainersdepartment.html',{'Adm':Adm,'Dept':Dept,'Desig':Desig})
+
+
+def AdmnOfc_trainersDep(request,did):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Dept = department.objects.get(id = did)
+        deptid=did
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        Trainer = designation.objects.get(designation='Trainer')
+        trainers_data=user_registration.objects.filter(designation=Trainer).filter(status="active").filter(department=did)
+        topics=topic.objects.all()
+        return render(request,'AdmnOfc_trainerstable.html',{'Adm':Adm,'trainers_data':trainers_data,'topics':topics,'Dept':Dept,'deptid':deptid})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_trainer(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        #team=create_team.objects.all()
+        user=user_registration.objects.filter(id=id)
+        team=create_team.objects.all().order_by('-id')
+        return render(request,'AdmnOfc_trainer.html',{'team':team,'user':user,'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfcEmpProfile(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        Project_man_data = user_registration.objects.get(id = id)
+        labels = []
+        data = []
+        queryset = user_registration.objects.filter(id=id)
+        for i in queryset:
+            labels=[i.workperformance,i.attitude,i.creativity]
+            
+            
+            data=[i.workperformance,i.attitude,i.creativity]
+        return render(request,'AdmnOfc_emp_profile.html',{'labels':labels,'data':data,'pro_man_data':Project_man_data,'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_empAttendance(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        id = id
+        return render(request, 'AdmnOfc_emp_attendnc.html',{'Adm':Adm,'id':id})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_empAttendanceSort(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        id = id
+        if request.method == "POST":
+            fromdate = request.POST.get('fromdate')
+            todate = request.POST.get('todate') 
+            mem1 = attendance.objects.filter(date__range=[fromdate, todate]).filter(user_id = id).order_by('-id')
+        return render(request, 'AdmnOfc_empattendsort.html',{'mem1':mem1,'Adm':Adm,'id':id})
+    else:
+        return redirect('/') 
+
+
+
+def AdmnOfc_accSettings(request):
+    if 'AdmOfc_id' in request.session:
+        
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        return render(request,'AdmnOfc_accsettings.html', {'Adm': Adm})
+    else:
+        return redirect('/')
+
+def AdmnOfc_accSettingsImageChange(request,id):
+    if 'AdmOfc_id' in request.session:
+        
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        if request.method == 'POST':
+            abc = user_registration.objects.get(id=id)
+            abc.photo = request.FILES['filename']
+            abc.save()
+            return redirect('AdmnOfc_accSettings')
+        return render(request, 'AdmnOfc_accsettings.html',{'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_dmproject(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        proj=DM_projects.objects.get(id=id)
+        return render(request,'AdmnOfc_dmproject_show.html', {'proj':proj,'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_trainingteam1(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        id=id
+        Trainee = designation.objects.get(designation='Trainee')
+        num=previousTeam.objects.filter(teamname_id=id).count()
+        num1=topic.objects.filter(team=id).count()
+        return render(request,'AdmnOfc_trainingteam1.html',{'id':id,'num':num,'num1':num1,'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_traineestable(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        Trainee = designation.objects.get(designation='Trainee')
+        trainees_data=previousTeam.objects.filter(teamname_id=id)
+        return render(request,'AdmnOfc_traineestable.html',{'trainees_data':trainees_data,'Adm':Adm}) 
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_topictable(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        topics=topic.objects.filter(team=id).order_by("-id")
+        return render(request,'AdmnOfc_topictable.html',{'topics':topics,'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_trainingprofile(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        trainees_data=user_registration.objects.get(id=id)
+        #Trainee = designation.objects.get(designation='Trainee')
+        #trainees_data=user_registration.objects.filter(designation=Trainee)
+        user=user_registration.objects.get(id=id)
+        num=trainer_task.objects.filter(user=user).filter(task_status='1').count()
+        return render(request,'AdmnOfc_trainingprofile.html',{'trainees_data':trainees_data,'num':num,'Adm':Adm})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_completedtasktable(request,id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        user=user_registration.objects.get(id=id)
+        task=trainer_task.objects.filter(user=user).order_by('-id')
+        return render(request,'AdmnOfc_completedtasktable.html',{'task_data':task,'Adm':Adm})   
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_dm_report_full_data(request,task_id,proj_id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        
+        proj=DM_projects.objects.get(id=proj_id)
+
+        if 1 == task_id:
+            task_data=DataCollect.objects.all()
+            rcount=0
+            for i in task_data:
+                if i.Project_name.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data':task_data,'rcount':rcount,'proj':proj})
+        elif 2 == task_id:
+            task_data1=Backlinks.objects.all()
+            rcount=0
+            for i in task_data1:
+                if i.bd_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data1':task_data1,'rcount':rcount,'proj':proj})
+        
+        elif 3 == task_id:
+            task_data6=BlogCalander.objects.all()
+            rcount=0
+            for i in task_data6:
+                if i.blog_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data6':task_data6,'rcount':rcount,'proj':proj})
+        
+        elif 4 == task_id:
+            task_data7=SmmPoster.objects.all()
+            rcount=0
+            for i in task_data7:
+                if i.smm_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data7':task_data7,'rcount':rcount,'proj':proj})
+        
+        elif 5 == task_id:
+            task_data2=WebpageContent.objects.all()
+            rcount=0
+            for i in task_data2:
+                if i.web_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data2':task_data2,'rcount':rcount,'proj':proj})
+        
+        elif 6 == task_id:
+            task_data5=OnPage.objects.all()
+            rcount=0
+            for i in task_data5:
+                if i.op_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data5':task_data5,'rcount':rcount,'proj':proj})
+        
+        elif 7 == task_id:
+            task_data3=CompanyAnalysis.objects.all()
+            rcount=0
+            for i in task_data3:
+                if i.analysis_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data3':task_data3,'rcount':rcount,'proj':proj})
+        
+        elif 8 == task_id:
+            task_data4=ClientData.objects.all()
+            rcount=0
+            for i in task_data4:
+                if i.cd_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data4':task_data4,'rcount':rcount,'proj':proj})
+    else:
+        return redirect('/')
+
+
+def AdmnOfc_dm_datereport_data(request,retask_id,repj_id):
+    if 'AdmOfc_id' in request.session:
+        if request.session.has_key('AdmOfc_id'):
+            AdmOfc_id = request.session['AdmOfc_id']
+        else:
+            return redirect('/')
+        Adm = user_registration.objects.filter(id=AdmOfc_id)
+        
+        proj=DM_projects.objects.get(id=repj_id)
+
+        if request.method == 'POST':
+            fromdate = request.POST['report_from']
+            todate = request.POST['report_to']
+
+
+        if 1 == retask_id:
+            task_data=DataCollect.objects.filter(dc_date__gte=fromdate, dc_date__lte=todate)
+           
+            rcount=0
+            for i in task_data:
+                if i.Project_name.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+           
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data':task_data,'rcount':rcount,'proj':proj})
+        
+        elif 2 == retask_id:
+            task_data1=Backlinks.objects.filter(bd_date__gte=fromdate, bd_date__lte=todate)
+            rcount=0
+            for i in task_data1:
+                if i.bd_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data1':task_data1,'rcount':rcount,'proj':proj})
+        
+        elif 3 == retask_id:
+            task_data6=BlogCalander.objects.filter(dc_date__gte=fromdate, dc_date__lte=todate)
+            rcount=0
+            for i in task_data6:
+                if i.blog_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data6':task_data6,'rcount':rcount,'proj':proj})
+        
+        elif 4 == retask_id:
+            task_data7=SmmPoster.objects.filter(dc_date__gte=fromdate, dc_date__lte=todate)
+            rcount=0
+            for i in task_data7:
+                if i.smm_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data7':task_data7,'rcount':rcount,'proj':proj})
+        
+        elif 5 == retask_id:
+            task_data2=WebpageContent.objects.filter(dc_date__gte=fromdate, dc_date__lte=todate)
+            rcount=0
+            for i in task_data2:
+                if i.web_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data2':task_data2,'rcount':rcount,'proj':proj})
+        
+        elif 6 == retask_id:
+            task_data5=OnPage.objects.filter(dc_date__gte=fromdate, dc_date__lte=todate)
+            rcount=0
+            for i in task_data5:
+                if i.op_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data5':task_data5,'rcount':rcount,'proj':proj})
+        
+        elif 7 == retask_id:
+            task_data3=CompanyAnalysis.objects.filter(dc_date__gte=fromdate, dc_date__lte=todate)
+            rcount=0
+            for i in task_data3:
+                if i.analysis_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data3':task_data3,'rcount':rcount,'proj':proj})
+        
+        elif 8 == retask_id:
+            task_data4=ClientData.objects.filter(dc_date__gte=fromdate, dc_date__lte=todate)
+            rcount=0
+            for i in task_data4:
+                if i.cd_taskid.dm_project_id.id == proj.id :
+                    rcount=rcount+1
+            return render(request, 'AdmnOfc_dmproject_show.html',{'Adm': Adm,'task_data4':task_data4,'rcount':rcount,'proj':proj})
+    else:
+        return redirect('/')
+
 
 #_________end________________________________
