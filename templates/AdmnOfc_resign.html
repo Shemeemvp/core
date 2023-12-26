@@ -117,8 +117,8 @@
                                         <div class="badge badge-outline-info">Request Pending</div>
                                     </a>
                                     {% elif i.exp_certificate_status == 'rejected' %}
-                                    <a href="#">
-                                        <div class="badge badge-outline-danger">Request Rejected</div>
+                                    <a href="{% url 'AdmnOfc_requestExpCertificate' i.id %}">
+                                        <div class="badge badge-outline-danger" onclick="return confirm('Are you sure you want to request the certificate again?')">Request Rejected</div>
                                     </a>
                                     {% elif i.exp_certificate_status == 'approved' %}
                                     <a href="{% url 'pdfex' i.id %}">
